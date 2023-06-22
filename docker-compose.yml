@@ -1,0 +1,13 @@
+version: "3"
+services:
+  popebot:
+    image: ghcr.io/adulan/popebot:v0.1.0
+    restart: unless-stopped
+    environment:
+      DISCORD_TOKEN="YOUR_TOKEN"
+      GUILD_ID="YOUR_GUILD_ID"
+      POLL_CHANNEL_ID="YOUR_CHANNEL_ID"
+      POPELINESS_CHANNEL_ID="YOUR_CHANNEL_ID"
+      HABEMUS_CHANNEL_ID="YOUR_CHANNEL_ID"
+      ABSOLUTION_CHANNEL_ID="YOUR_CHANNEL_ID"
+      POPE_ROLE_ID="YOUR_ROLE_ID"
