@@ -30,6 +30,7 @@ docker run -it \
 --env HABEMUS_CHANNEL_ID="YOUR_CHANNEL_ID" \
 --env ABSOLUTION_CHANNEL_ID="YOUR_CHANNEL_ID" \
 --env POPE_ROLE_ID="YOUR_ROLE_ID" \
+--env CARDINAL_ROLE_ID="YOUR_ROLE_ID" \
 --rm --name pope_mobile.py popebot:latest
 ```
 
@@ -42,6 +43,7 @@ docker run -it \
 | HABEMUS_CHANNEL_ID | Required | ID of the Server Channel to perform Habemus Papam - Announcement of the new Pope
 | ABSOLUTION_CHANNEL_ID | Required | ID of the Server Channel to listen to for Meme Absolutions
 | POPE_ROLE_ID | Required | ID of the Server Role of the Pope
+| CARDINAL_ROLE_ID | Optional | ID of the Server Role of the Cardinals. Assigns all members to this role on startup
 
 
 ## Install from package
