@@ -8,7 +8,7 @@ async def absolve(user, channel):
     for cardinal in cardinal_list:
         if cardinal.id == id:
             cardinal.sin_coins = 0
-            await channel.send(f"<@{id}, You have been absolved of all your sins!")
+            await channel.send(f"<@{id}>, You have been absolved of all your sins!")
             return
 
 # Create a message that prints out the current standings

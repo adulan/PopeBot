@@ -2,6 +2,7 @@ import cardinal, constants, discord
 
 
 cardinal_list = []
+armageddon = False
 
 def author_is_pope(message):
     author = message.author
@@ -21,7 +22,7 @@ async def populate_cardinals(guild):
         
         if cardinal_role is not None:
             try:
-                if not member_has_role(member, cardinal_role):
+                if not member_has_role(member, cardinal_role.id):
                     await member.add_roles(cardinal_role)
                     print(f"Assigned {member.name} to Cardinals Role")
             except discord.DiscordException as e:
@@ -38,7 +39,7 @@ def get_cardinal_by_id(id):
     return None
 
 
-def member_has_role(member, role):
+def member_has_role(member, role_id):
     try:
         roles = member.roles
     except:
@@ -46,6 +47,6 @@ def member_has_role(member, role):
         return False
 
     for member_role in roles:
-        if member_role.id == role.id:
+        if member_role.id == role_id:
             return True
     return False

@@ -9,7 +9,6 @@ intents.message_content = True
 intents.members = True
 client = discord.Client(intents=intents)
 
-armageddon = False
 
 # Define an event handler for when the client connects to Discord
 @client.event
@@ -32,22 +31,26 @@ async def on_message(message):
             # check if the author is a pope
             if not utils.author_is_pope(message):
                 await message.reply("Only the Pope can absolve sins!")
-
+                author = utils.get_cardinal_by_id(message.author.id)
+                if author is not None:
+                    author.add_sin_coins(25)
+                    return
+            
             # check if the message has a mention
             if len(message.mentions) > 0:
                 user = message.mentions[0]
-                actions.absolve(user, message.channel)
+                await actions.absolve(user, message.channel)
             else:
                 await message.reply("You need to mention someone to absolve them. Format: !Absolve @user")
         elif message.content.startswith("!Popeliness"):
             await actions.print_standings(message.channel)
         elif message.content.startswith("!Armageddon"):
-            armageddon = True
+            utils.armageddon = True
             await message.channel.send("Armageddon has begun.")
         elif message.content.startswith("!Rapture"):
-            if armageddon and utils.author_is_pope(message):
+            if utils.armageddon and utils.author_is_pope(message):
                 await message.channel.send("Prepare for the Rapture!")
-                actions.rapture()
+                # actions.rapture()
         elif message.content.startswith("!PP"):
             message_content = message.content.split(" ")
             # check if the message has two parameters
