@@ -99,12 +99,12 @@ async def on_message(message):
             else:
                 await message.reply("You need to mention someone to give them Sin Coins. Format: !SC @user amount")
         elif message.content.startswith("!Cardinals"):
-            #print size of cardinal list
-            print("There are {0} cardinals.".format(len(utils.cardinal_list)))
+            output = []
             await message.channel.send("Cardinals:")
             for cardinal in utils.cardinal_list:
-                list.append(f"{cardinal.name}: {cardinal.pope_points} Pope Points, {cardinal.sin_coins} Sin Coins\n")
-            await message.channel.send(list)    
+                output.append(f"{cardinal.name}")
+            output = "\n".join(output)
+            await message.channel.send(output)    
     
 # Run the client with the Discord API token
 client.run(os.environ.get("DISCORD_TOKEN"))

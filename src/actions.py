@@ -1,4 +1,3 @@
-import cardinal, discord
 from utils import cardinal_list
 
 

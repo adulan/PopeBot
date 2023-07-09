@@ -1,4 +1,5 @@
-import cardinal, constants, discord
+import cardinal, constants
+import discord
 
 
 cardinal_list = []
