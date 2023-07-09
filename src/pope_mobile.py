@@ -27,7 +27,7 @@ async def on_message(message):
     
     # check if the message is a command
     if message.content.startswith("!"):
-        await process_command(message)
+        await process_command(message, client)
     
 # Run the client with the Discord API token
 client.run(DISCORD_TOKEN)

@@ -1,4 +1,4 @@
-from utils import cardinal_list, armageddon, author_is_pope, get_cardinal_by_id
+from utils import cardinal_list, armageddon, author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change
 
 
 # Function that sets the given user's sin_coins to 0
@@ -14,9 +14,9 @@ async def absolve(user, channel):
 async def print_standings(channel):
     # Create a list of strings that will be printed
     standings = []
-    cardinal_list.sort(key=lambda x: x.popeliness(), reverse=True)
+    cardinal_ranks = rank_cardinals()
     
-    for cardinal in cardinal_list:
+    for cardinal in cardinal_ranks:
         standings.append("{0}: {1}".format(cardinal.name, cardinal.popeliness()))
     
     # Join the standings with newlines
@@ -31,7 +31,7 @@ async def print_cardinals(channel):
     output = "\n".join(output)
     await channel.send(output)
 
-async def process_command(message):
+async def process_command(message, client):
     global armageddon
     message_content = message.content.split(" ")
     message_command = message_content[0].upper()
@@ -50,6 +50,7 @@ async def process_command(message):
             if len(message.mentions) > 0:
                 user = message.mentions[0]
                 await absolve(user, message.channel)
+                await check_for_pope_change(client)
             else:
                 await message.reply("You need to mention someone to absolve them. Format: !Absolve @user")
         
@@ -88,6 +89,7 @@ async def process_command(message):
                 else:
                     amount = int(amount)
                     cardinal.add_pope_points(amount)
+                    await check_for_pope_change(client)
             else:
                 await message.reply("You need to mention someone to give them Pope Points. Format: !PP @user amount")
 
@@ -111,6 +113,7 @@ async def process_command(message):
                 else:
                     amount = int(amount)
                     cardinal.add_sin_coins(amount)
+                    await check_for_pope_change(client)
             else:
                 await message.reply("You need to mention someone to give them Sin Coins. Format: !SC @user amount")
     
