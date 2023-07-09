@@ -19,28 +19,38 @@ class ActionsTests(IsolatedAsyncioTestCase):
     # Test Actions absolve
     @patch('os.getenv')
     async def test_actions_absolve(self, mock_getenv):
-        # Point our secondary imports to correct locations
+        # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        
+        from src.utils import author_is_pope, get_cardinal_by_id
+        sys.modules['utils'].author_is_pope = author_is_pope
+        sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
+        sys.modules['utils'].armageddon = False
         from src.actions import absolve
        
+        # Setup mock Discord member
         member = Mock()
         member.name = "Test Cardinal"
         member.id = 1234567890
         
+        # Create a cardinal using the mock member
         test_cardinal = Cardinal(member)
-        test_cardinal.add_sin_coins(10)
+        test_cardinal.sin_coins = 10
         test_cardinal_list = [test_cardinal]
+        # Check that mock's sin coins were applied
         assert test_cardinal_list[0].sin_coins == 10
 
         with patch('src.actions.cardinal_list', test_cardinal_list):
+            # Mock discord channel
             channel = AsyncMock()
             channel.send = AsyncMock()
+            
+            # Absolve the cardinal and check that the sin_coins were removed
             await absolve(member, channel)
             assert test_cardinal.sin_coins == 0
+            #Check that the cardinal was mentioned
             assert channel.send.assert_called_once_with(f"<@{member.id}>, You have been absolved of all your sins!") == None
 
 
