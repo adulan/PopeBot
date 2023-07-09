@@ -21,15 +21,15 @@ async def print_standings(channel):
     
     # Join the standings with newlines
     standings = "\n".join(standings)
-    await channel.send(standings)
+    if standings != "":
+        await channel.send(standings)
 
 async def print_cardinals(channel):
     output = []
-    await channel.send("Cardinals:")
     for cardinal in cardinal_list:
         output.append(f"{cardinal.name}")
     output = "\n".join(output)
-    await channel.send(output)
+    await channel.send(f"Cardinals:\n{output}")
 
 async def process_command(message, client):
     global armageddon
@@ -44,7 +44,7 @@ async def process_command(message, client):
                 author = get_cardinal_by_id(message.author.id)
                 if author is not None:
                     author.add_sin_coins(25)
-                    return
+                return
             
             # check if the message has a mention
             if len(message.mentions) > 0:
