@@ -1,5 +1,9 @@
 FROM python:3
 
+LABEL org.opencontainers.image.source=https://github.com/adulan/popebot
+LABEL org.opencontainers.image.description="PopeBot Docker Image"
+LABEL org.opencontainers.image.licenses=MIT
+
 WORKDIR /usr/src/app
 RUN chmod -R 775 /usr/src/app
 
