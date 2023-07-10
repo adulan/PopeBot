@@ -31,9 +31,6 @@ async def populate_cardinals(client):
         cur_cardinal = get_member_from_cardinal_list(member)
         if cur_cardinal is None:
             cardinal_list.append(cardinal.Cardinal(member))
-            print(f"Added {member.name} to cardinal_list")
-        else:
-            print(f"{member.name} already in cardinal_list")
         
         if cardinal_role is not None:
             try:
@@ -46,6 +43,7 @@ async def populate_cardinals(client):
             
     print("Cardinals populated.")
 
+
 # Populate cardinals from json file
 def populate_cardinals_json(guild):
     global cardinal_list
@@ -53,13 +51,14 @@ def populate_cardinals_json(guild):
         with open(constants.CARDINAL_LIST_FILE, "r") as f:
             cardinal_json = json.load(f)
             f.close()
+        counter = 0
         for element in cardinal_json:
-            print(element)
             member = guild.get_member(element["id"])
             cur_cardinal = cardinal.Cardinal(member)
             cur_cardinal.from_json(element)
             cardinal_list.append(cur_cardinal)
-        print("Cardinals populated from json.")
+            counter += 1
+        print(f"{counter} Cardinals populated from json.")
     except Exception as e:
         print("Error: Could not populate cardinals from json.")
         print(e)
@@ -94,6 +93,7 @@ def get_member_from_cardinal_list(member):
         if cardinal.id == member.id:
             return member
     return None
+
 
 def member_has_role(member, role_id):
     try:
@@ -130,7 +130,6 @@ async def check_for_pope_change(client):
         first_place = ranked_cardinals[0]
         await set_pope(first_place.member, None)
     else:
-        print(f"Current pope is {current_pope.name}")
         ranked_cardinals = rank_cardinals()
         first_place = ranked_cardinals[0]
         if first_place != current_pope:

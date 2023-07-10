@@ -1,5 +1,5 @@
 import datetime, discord
-from constants import GUILD_ID, DISCORD_TOKEN
+from constants import DISCORD_TOKEN
 from utils import populate_cardinals
 from actions import process_command
 
@@ -18,6 +18,7 @@ async def on_ready():
     print(datetime.datetime.now())
     await populate_cardinals(client)
 
+
 # Define an event handler for when a message is sent in a channel
 @client.event
 async def on_message(message):
@@ -28,6 +29,7 @@ async def on_message(message):
     # check if the message is a command
     if message.content.startswith("!"):
         await process_command(message, client)
-    
+
+
 # Run the client with the Discord API token
 client.run(DISCORD_TOKEN)

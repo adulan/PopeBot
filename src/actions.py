@@ -1,4 +1,5 @@
-from utils import cardinal_list, armageddon, author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change
+from utils import cardinal_list, armageddon, author_is_pope, \
+    get_cardinal_by_id, rank_cardinals, check_for_pope_change
 
 
 # Function that sets the given user's sin_coins to 0
@@ -24,12 +25,14 @@ async def print_standings(channel):
     if standings != "":
         await channel.send(standings)
 
+
 async def print_cardinals(channel):
     output = []
     for cardinal in cardinal_list:
         output.append(f"{cardinal.name}")
     output = "\n".join(output)
     await channel.send(f"Cardinals:\n{output}")
+
 
 async def process_command(message, client):
     global armageddon
