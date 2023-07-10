@@ -8,3 +8,4 @@ ANNOUNCEMENT_CHANNEL_ID = int(os.getenv("HABEMUS_CHANNEL_ID"))
 ABSOLUTION_CHANNEL_ID = int(os.getenv("ABSOLUTION_CHANNEL_ID"))
 POPE_ROLE_ID = int(os.getenv("POPE_ROLE_ID"))
 CARDINAL_ROLE_ID = int(os.getenv("CARDINAL_ROLE_ID")) if os.getenv("CARDINAL_ROLE_ID") is not None else None
+CARDINAL_LIST_FILE = "/usr/src/app/cardinal_list.json"

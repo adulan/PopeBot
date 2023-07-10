@@ -23,3 +23,19 @@ class Cardinal:
     # calculate popliness
     def popeliness(self):
         return self.__class__.pope_point_modifier*self.pope_points - self.__class__.sin_coin_modifier*self.sin_coins
+    
+    def to_json(self):
+        return {
+            "name": self.name,
+            "id": self.id,
+            "pope_points": self.pope_points,
+            "sin_coins": self.sin_coins
+        }
+    
+
+    def from_json(self, json):
+        print(json["name"])
+        self.name = json["name"]
+        self.id = json["id"]
+        self.pope_points = json["pope_points"]
+        self.sin_coins = json["sin_coins"]

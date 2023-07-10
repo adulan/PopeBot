@@ -16,7 +16,7 @@ client = discord.Client(intents=intents)
 async def on_ready():
     print("Logged in as {0.user}.".format(client))
     print(datetime.datetime.now())
-    await populate_cardinals(client.get_guild(GUILD_ID))
+    await populate_cardinals(client)
 
 # Define an event handler for when a message is sent in a channel
 @client.event
