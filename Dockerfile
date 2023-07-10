@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.11.4-alpine3.17
 
 LABEL org.opencontainers.image.source=https://github.com/adulan/popebot
 LABEL org.opencontainers.image.description="PopeBot Docker Image"
