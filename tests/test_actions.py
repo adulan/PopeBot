@@ -490,5 +490,321 @@ class ActionsTests(IsolatedAsyncioTestCase):
         assert channel.send.assert_called_once_with("Prepare for the Rapture!") == None
 
 
+    async def test_process_command_pope_points(self):
+        # Account for directory differences between test and src
+        from src.cardinal import Cardinal
+        sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['cardinal'] = __import__('src.cardinal')
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['utils'].cardinal_list = ['']
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change
+        sys.modules['utils'].author_is_pope = author_is_pope
+        sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
+        sys.modules['utils'].rank_cardinals = rank_cardinals
+        sys.modules['utils'].check_for_pope_change = check_for_pope_change
+        sys.modules['utils'].armageddon = False
+        from src.actions import process_command
+        
+        # Mock discord objects
+        client = AsyncMock()
+        channel = AsyncMock()
+        mock_check_for_pope_change = AsyncMock()
+
+        # Mock message
+        message = AsyncMock()
+        message.reply = AsyncMock()
+        message.content = "!pp @TestCardinal 100"
+        message.channel = channel
+
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+
+        message.mentions = [member]
+        
+        test_cardinal = Cardinal(member)
+        test_cardinal_list = [test_cardinal]
+        
+        with patch('src.actions.check_for_pope_change', mock_check_for_pope_change), patch("src.utils.cardinal_list", test_cardinal_list):
+            await process_command(message, client)
+        assert mock_check_for_pope_change.assert_called_once_with(client) == None
+        assert test_cardinal.pope_points == 100
+
+
+    async def test_process_command_pp_bad_mention(self):
+        # Account for directory differences between test and src
+        from src.cardinal import Cardinal
+        sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['cardinal'] = __import__('src.cardinal')
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['utils'].cardinal_list = ['']
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change
+        sys.modules['utils'].author_is_pope = author_is_pope
+        sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
+        sys.modules['utils'].rank_cardinals = rank_cardinals
+        sys.modules['utils'].check_for_pope_change = check_for_pope_change
+        sys.modules['utils'].armageddon = False
+        from src.actions import process_command
+        
+        # Mock discord objects
+        client = AsyncMock()
+        channel = AsyncMock()
+
+        # Mock message
+        message = AsyncMock()
+        message.reply = AsyncMock()
+        message.content = "!pp @bad 0"
+        message.channel = channel
+        
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 1234567890
+
+        message.mentions = []
+        
+        await process_command(message, client)
+        assert message.reply.assert_called_once_with("You need to mention someone to give them Pope Points. Format: !PP @user amount") == None
+
+
+    async def test_process_command_pp_bad_format(self):
+        # Account for directory differences between test and src
+        from src.cardinal import Cardinal
+        sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['cardinal'] = __import__('src.cardinal')
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['utils'].cardinal_list = ['']
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change
+        sys.modules['utils'].author_is_pope = author_is_pope
+        sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
+        sys.modules['utils'].rank_cardinals = rank_cardinals
+        sys.modules['utils'].check_for_pope_change = check_for_pope_change
+        sys.modules['utils'].armageddon = False
+        from src.actions import process_command
+        
+        # Mock discord objects
+        client = AsyncMock()
+        channel = AsyncMock()
+
+        # Mock message
+        message = AsyncMock()
+        message.reply = AsyncMock()
+        message.content = "!pp"
+        message.channel = channel
+        
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 1234567890
+
+        message.mentions = []
+        
+        await process_command(message, client)
+        assert message.reply.assert_called_once_with("Format: !PP @user amount") == None
+
+
+    async def test_process_command_pp_bad_amount(self):
+        # Account for directory differences between test and src
+        from src.cardinal import Cardinal
+        sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['cardinal'] = __import__('src.cardinal')
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['utils'].cardinal_list = ['']
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change
+        sys.modules['utils'].author_is_pope = author_is_pope
+        sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
+        sys.modules['utils'].rank_cardinals = rank_cardinals
+        sys.modules['utils'].check_for_pope_change = check_for_pope_change
+        sys.modules['utils'].armageddon = False
+        from src.actions import process_command
+        
+        # Mock discord objects
+        client = AsyncMock()
+        channel = AsyncMock()
+
+        # Mock message
+        message = AsyncMock()
+        message.reply = AsyncMock()
+        message.content = "!pp @TestCardinal a"
+        message.channel = channel
+
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+
+        message.mentions = [member]
+        
+        test_cardinal = Cardinal(member)
+        test_cardinal_list = [test_cardinal]        
+        
+        with patch('src.utils.cardinal_list', test_cardinal_list):
+            await process_command(message, client)
+        assert message.reply.assert_called_once_with("You need to enter a number. Format: !PP @user amount") == None
+
+
+    async def test_process_command_sin_coins(self):
+        # Account for directory differences between test and src
+        from src.cardinal import Cardinal
+        sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['cardinal'] = __import__('src.cardinal')
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['utils'].cardinal_list = ['']
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change
+        sys.modules['utils'].author_is_pope = author_is_pope
+        sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
+        sys.modules['utils'].rank_cardinals = rank_cardinals
+        sys.modules['utils'].check_for_pope_change = check_for_pope_change
+        sys.modules['utils'].armageddon = False
+        from src.actions import process_command
+        
+        # Mock discord objects
+        client = AsyncMock()
+        channel = AsyncMock()
+        mock_check_for_pope_change = AsyncMock()
+        
+        # Mock message
+        message = AsyncMock()
+        message.reply = AsyncMock()
+        message.content = "!Sc @TestCardinal 50"
+        message.channel = channel
+
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+
+        message.mentions = [member]
+        
+        test_cardinal = Cardinal(member)
+        test_cardinal_list = [test_cardinal]
+        
+        with patch('src.actions.check_for_pope_change', mock_check_for_pope_change), patch("src.utils.cardinal_list", test_cardinal_list):
+            await process_command(message, client)
+        assert mock_check_for_pope_change.assert_called_once_with(client) == None
+        assert test_cardinal.sin_coins == 50
+
+
+    async def test_process_command_sc_bad_mention(self):
+        # Account for directory differences between test and src
+        from src.cardinal import Cardinal
+        sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['cardinal'] = __import__('src.cardinal')
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['utils'].cardinal_list = ['']
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change
+        sys.modules['utils'].author_is_pope = author_is_pope
+        sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
+        sys.modules['utils'].rank_cardinals = rank_cardinals
+        sys.modules['utils'].check_for_pope_change = check_for_pope_change
+        sys.modules['utils'].armageddon = False
+        from src.actions import process_command
+        
+        # Mock discord objects
+        client = AsyncMock()
+        channel = AsyncMock()
+        
+        # Mock message
+        message = AsyncMock()
+        message.reply = AsyncMock()
+        message.content = "!sC @bad 0"
+        message.channel = channel
+        
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 1234567890
+
+        message.mentions = []
+        
+        await process_command(message, client)
+        assert message.reply.assert_called_once_with("You need to mention someone to give them Sin Coins. Format: !SC @user amount") == None
+
+
+    async def test_process_command_sc_bad_format(self):
+        # Account for directory differences between test and src
+        from src.cardinal import Cardinal
+        sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['cardinal'] = __import__('src.cardinal')
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['utils'].cardinal_list = ['']
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change
+        sys.modules['utils'].author_is_pope = author_is_pope
+        sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
+        sys.modules['utils'].rank_cardinals = rank_cardinals
+        sys.modules['utils'].check_for_pope_change = check_for_pope_change
+        sys.modules['utils'].armageddon = False
+        from src.actions import process_command
+        
+        # Mock discord objects
+        client = AsyncMock()
+        channel = AsyncMock()
+        
+        # Mock message
+        message = AsyncMock()
+        message.reply = AsyncMock()
+        message.content = "!sc"
+        message.channel = channel
+        
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 1234567890
+        
+        message.mentions = []
+        
+        await process_command(message, client)
+        assert message.reply.assert_called_once_with("Format: !SC @user amount") == None
+
+
+    async def test_process_command_sc_bad_amount(self):
+        # Account for directory differences between test and src
+        from src.cardinal import Cardinal
+        sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['cardinal'] = __import__('src.cardinal')
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['utils'].cardinal_list = ['']
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change
+        sys.modules['utils'].author_is_pope = author_is_pope
+        sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
+        sys.modules['utils'].rank_cardinals = rank_cardinals
+        sys.modules['utils'].check_for_pope_change = check_for_pope_change
+        sys.modules['utils'].armageddon = False
+        from src.actions import process_command
+        
+        # Mock discord objects
+        client = AsyncMock()
+        channel = AsyncMock()
+                
+        # Mock message
+        message = AsyncMock()
+        message.reply = AsyncMock()
+        message.content = "!SC @TestCardinal a"
+        message.channel = channel
+
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+        
+        message.mentions = [member]
+        
+        test_cardinal = Cardinal(member)
+        test_cardinal_list = [test_cardinal]        
+        
+        with patch('src.utils.cardinal_list', test_cardinal_list):
+            await process_command(message, client)
+        assert message.reply.assert_called_once_with("You need to enter a number. Format: !SC @user amount") == None
+
+
 if __name__ == '__main__':
     unittest.main()

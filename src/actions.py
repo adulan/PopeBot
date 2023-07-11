@@ -99,7 +99,7 @@ async def process_command(message, client):
         case "!SC":
             # check if the message has two parameters
             if len(message_content) != 3:
-                await message.reply("Format: !PP @user amount")
+                await message.reply("Format: !SC @user amount")
                 return
             if len(message.mentions) > 0:
                 user = message.mentions[0]
