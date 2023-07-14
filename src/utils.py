@@ -1,4 +1,4 @@
-import cardinal, constants
+import constants, cardinal
 import discord, json, os
 
 
@@ -75,8 +75,9 @@ def save_cardinals_json():
             json.dump(cardinal_json, f)
             f.close()
         print("Cardinals saved.")
-    except:
+    except Exception as e:
         print("Error: Could not save cardinals.")
+        print(e)
 
 
 def get_cardinal_by_id(id):
@@ -127,6 +128,8 @@ async def check_for_pope_change(client):
     current_pope = get_pope()
     if current_pope is None:
         ranked_cardinals = rank_cardinals()
+        if len(ranked_cardinals) == 0:
+            return False
         first_place = ranked_cardinals[0]
         await set_pope(first_place.member, None)
     else:

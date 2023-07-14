@@ -33,3 +33,7 @@ async def on_message(message):
 
 # Run the client with the Discord API token
 client.run(DISCORD_TOKEN)
+
+# python -m coverage run -m unittest tests.test_actions tests.test_cardinal tests.test_utils
+# python -m coverage report 
+# echo $(python -c "import xml.etree.ElementTree as ET; root = ET.parse('coverage.xml').getroot(); print(root.attrib['line-rate'])")

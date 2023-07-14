@@ -66,5 +66,41 @@ class CardinalTests(unittest.TestCase):
         assert test_cardinal.popeliness() == -30
 
 
+    # Test Cardinal to_json
+    def test_cardinal_to_json(self):
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 1234567890
+        test_cardinal = cardinal.Cardinal(member)
+        test_cardinal.add_pope_points(10)
+        test_cardinal.add_sin_coins(5)
+        assert test_cardinal.to_json() == {
+            "name": "Test Cardinal",
+            "id": 1234567890,
+            "pope_points": 10,
+            "sin_coins": 5
+        }
+
+    
+    # Test Cardinal from_json
+    def test_cardinal_from_json(self):
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 1234567890
+        
+        test_cardinal = cardinal.Cardinal(member)
+        test_cardinal.from_json({
+            "name": "Test Cardinal",
+            "id": 1234567890,
+            "pope_points": 10,
+            "sin_coins": 5
+        })
+
+        assert test_cardinal.name == "Test Cardinal"
+        assert test_cardinal.id == 1234567890
+        assert test_cardinal.pope_points == 10
+        assert test_cardinal.sin_coins == 5
+
+
 if __name__ == '__main__':
     unittest.main()
