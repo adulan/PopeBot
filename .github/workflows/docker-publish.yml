@@ -40,6 +40,16 @@ jobs:
             exit $test_exit_code
           fi
 
+      - name: Check test coverage
+        run: |
+          python -m coverage run -m  unittest tests.test_actions tests.test_cardinal tests.test_utils
+          coverage xml
+          coverage_threshold=$(python -c "import xml.etree.ElementTree as ET; root = ET.parse('coverage.xml').getroot(); print(root.attrib['line-rate'])")
+          if (( $(bc <<< "$coverage_threshold < 0.50") )); then
+            echo "Test coverage below 50%: $coverage_threshold"
+            exit 1
+          fi
+
       - name: Build Docker image
         run: docker build -t ghcr.io/adulan/popebot:${{ github.event.release.tag_name }} .
 

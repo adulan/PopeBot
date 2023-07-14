@@ -1,0 +1,4 @@
+[run]
+omit =
+    tests/*
+    src/pope_mobile.py
