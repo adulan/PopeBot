@@ -97,15 +97,11 @@ def get_member_from_cardinal_list(member):
 
 
 def member_has_role(member, role_id):
-    try:
-        roles = member.roles
-    except:
-        print("Error: Could not get roles from member")
-        return False
-
-    for member_role in roles:
-        if member_role.id == role_id:
-            return True
+    roles = member.roles
+    if roles != None:
+        for member_role in roles:
+            if member_role.id == role_id:
+                return True
     return False
 
 
@@ -131,7 +127,7 @@ async def check_for_pope_change(client):
         if len(ranked_cardinals) == 0:
             return False
         first_place = ranked_cardinals[0]
-        await set_pope(first_place.member, None)
+        await set_pope(first_place.member, None, client)
     else:
         ranked_cardinals = rank_cardinals()
         first_place = ranked_cardinals[0]
@@ -159,7 +155,7 @@ async def set_pope(new_pope, old_pope, client):
 async def announce_pope_change(member, client):
     try:
         channel = client.get_channel(constants.ANNOUNCEMENT_CHANNEL_ID)
-        await channel.send(f"{member.mention} is the new pope!")
+        await channel.send(f"{member.mention} is the New Pope!")
     except discord.DiscordException as e:
         print("Error: Could not announce pope change")
         print(e)

@@ -42,11 +42,14 @@ jobs:
 
       - name: Check test coverage
         run: |
-          python -m coverage run -m  unittest tests.test_actions tests.test_cardinal tests.test_utils
+          python -m coverage erase
+          python -m coverage run -m -a unittest tests.test_actions
+          python -m coverage run -m -a unittest tests.test_cardinal
+          python -m coverage run -m -a unittest tests.test_utils
           coverage xml
           coverage_threshold=$(python -c "import xml.etree.ElementTree as ET; root = ET.parse('coverage.xml').getroot(); print(root.attrib['line-rate'])")
-          if (( $(bc <<< "$coverage_threshold < 0.50") )); then
-            echo "Test coverage below 50%: $coverage_threshold"
+          echo "Test coverage: $coverage_threshold"
+          if (( $(bc <<< "$coverage_threshold < 0.75") )); then
             exit 1
           fi
 
