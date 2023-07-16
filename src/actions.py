@@ -1,3 +1,4 @@
+import discord
 from utils import cardinal_list, armageddon, author_is_pope, \
     get_cardinal_by_id, rank_cardinals, check_for_pope_change
 
@@ -14,24 +15,24 @@ async def absolve(user, channel):
 # Create a message that prints out the current standings
 async def print_standings(channel):
     # Create a list of strings that will be printed
-    standings = []
+    embed = discord.Embed(description="The current Cardinals of the Vatican")
     cardinal_ranks = rank_cardinals()
     
-    for cardinal in cardinal_ranks:
-        standings.append("{0}: {1}".format(cardinal.name, cardinal.popeliness()))
-    
-    # Join the standings with newlines
-    standings = "\n".join(standings)
-    if standings != "":
-        await channel.send(standings)
+    if len(cardinal_ranks) > 0:
+        fields = [("Cardinals", "\n".join([f"{cardinal.name}: {cardinal.popeliness()}" for cardinal in cardinal_ranks]), False)]
+        for name, value, inline in fields:
+            embed.add_field(name=name, value=value, inline=inline)
+        await channel.send(embed=embed)
 
 
 async def print_cardinals(channel):
-    output = []
-    for cardinal in cardinal_list:
-        output.append(f"{cardinal.name}")
-    output = "\n".join(output)
-    await channel.send(f"Cardinals:\n{output}")
+    embed = discord.Embed(description="The current Cardinals of the Vatican")
+    
+    if len(cardinal_list) > 0:
+        fields = [("Cardinals", "\n".join([f"{cardinal.name}: {cardinal.pope_points}, {cardinal.sin_coins} " for cardinal in cardinal_list]), False)]
+        for name, value, inline in fields:
+            embed.add_field(name=name, value=value, inline=inline)
+        await channel.send(embed=embed)
 
 
 async def process_command(message, client):

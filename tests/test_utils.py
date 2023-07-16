@@ -145,40 +145,6 @@ class UtilsTests(IsolatedAsyncioTestCase):
         assert print_mock.assert_called_once_with("Cardinals saved.") == None
 
     
-    # # Test populate cardinals json
-    # def test_populate_cardinals_json(self):
-    #     sys.modules['cardinal'] = __import__('src.cardinal')
-    #     from src.utils import populate_cardinals_json
-    #     from src.cardinal import Cardinal
-
-    #     # Mock a member
-    #     member = Mock()
-    #     member.name = "Test Cardinal"
-    #     member.id = 1234567890
-
-    #     # Mock guild
-    #     mock_guild = Mock()
-    #     mock_guild.get_member.return_value = member
-
-    #     # Add mock to cardinal_list
-    #     test_cardinal = Cardinal(member)
-    #     test_cardinal_list = [test_cardinal] 
-
-    #     # Mocks to capture function calls
-    #     print_mock = Mock()
-    #     test_file_data = '[{"name": "Test Cardinal", "id": 1234567890, "pope_points": 0, "sin_coins": 0}]'
-    #     expected_json_output = MagicMock(return_value = json.loads('[{"name": "Test Cardinal", "id": 1234567890, "pope_points": 0, "sin_coins": 0}]'))
-
-    #     with patch('src.utils.cardinal_list', test_cardinal_list), patch("builtins.print", print_mock),  patch('json.load', expected_json_output) as json_mock:
-    #         with patch('builtins.open', new_callable=mock_open()) as mock_file:
-    #             populate_cardinals_json(mock_guild)
-        
-    #     # Check that the file was opened and written to with JSON
-    #     mock_file.assert_called_once()
-    #     json_mock.assert_called_once()
-    #     assert print_mock.assert_called_once_with("1 Cardinals populated from json.") == None
-
-    
     # Test get_cardinal_by_id
     def test_get_cardinal_by_id(self):
         sys.modules['cardinal'] = __import__('src.cardinal')

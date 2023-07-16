@@ -89,9 +89,9 @@ class ActionsTests(IsolatedAsyncioTestCase):
         test_cardinal_list.append(test_cardinal)
 
         # Print standings and check that the channel was called
-        with patch('src.utils.cardinal_list', test_cardinal_list):
+        with patch('src.utils.cardinal_list', test_cardinal_list), patch('discord.Embed', Mock()):
             await print_standings(channel)
-        assert channel.send.assert_called_once_with("Cardinal Test: 5\nTest Cardinal: 0") == None
+        assert channel.send.assert_called_once() == None
 
     async def test_print_standings_with_empty_list(self):
         # Account for directory differences between test and src
@@ -111,7 +111,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         channel = AsyncMock()
         channel.send = AsyncMock()
 
-        # Print standings and check that the channel was called
+        # Check that the channel was not called
         with patch('src.utils.cardinal_list', []):
             await print_standings(channel)
         assert channel.send.assert_not_called() == None
@@ -134,6 +134,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         # Mock discord channel
         channel = AsyncMock()
         channel.send = AsyncMock()
+        mock_embed = Mock()
 
         # Create a list of cardinals
         test_cardinal_list = []
@@ -149,10 +150,33 @@ class ActionsTests(IsolatedAsyncioTestCase):
         test_cardinal_list.append(test_cardinal)
 
         # Print cardinals and check that the channel was called
-        with patch('src.actions.cardinal_list', test_cardinal_list):
+        with patch('src.actions.cardinal_list', test_cardinal_list), patch('discord.Embed', mock_embed):
             await print_cardinals(channel)
-        assert channel.send.assert_called_once_with("Cardinals:\nTest Cardinal\nCardinal Test") == None
+        assert channel.send.assert_called_once() == None
 
+
+    async def test_print_cardinals_with_empty_list(self):
+        # Account for directory differences between test and src
+        sys.modules['constants'] = __import__('src.constants')
+        sys.modules['cardinal'] = __import__('src.cardinal')
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['utils'].cardinal_list = ['']
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change
+        sys.modules['utils'].author_is_pope = author_is_pope
+        sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
+        sys.modules['utils'].rank_cardinals = rank_cardinals
+        sys.modules['utils'].check_for_pope_change = check_for_pope_change
+        sys.modules['utils'].armageddon = False
+        from src.actions import print_cardinals
+
+        # Mock discord channel
+        channel = AsyncMock()
+        channel.send = AsyncMock()
+
+        # Check that the channel was not called
+        with patch('src.actions.cardinal_list', []):
+            await print_cardinals(channel)
+        assert channel.send.assert_not_called() == None
 
     async def test_process_command_absolve_happy_pope_path(self):
         # Account for directory differences between test and src
@@ -648,6 +672,52 @@ class ActionsTests(IsolatedAsyncioTestCase):
         assert message.reply.assert_called_once_with("You need to enter a number. Format: !PP @user amount") == None
 
 
+    async def test_process_command_pope_points_bad_cardinal(self):
+        # Account for directory differences between test and src
+        from src.cardinal import Cardinal
+        sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['cardinal'] = __import__('src.cardinal')
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['utils'].cardinal_list = ['']
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change
+        sys.modules['utils'].author_is_pope = author_is_pope
+        sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
+        sys.modules['utils'].rank_cardinals = rank_cardinals
+        sys.modules['utils'].check_for_pope_change = check_for_pope_change
+        sys.modules['utils'].armageddon = False
+        from src.actions import process_command
+        
+        # Mock discord objects
+        client = AsyncMock()
+        channel = AsyncMock()
+        mock_check_for_pope_change = AsyncMock()
+        mock_print = Mock()
+
+        # Mock message
+        message = AsyncMock()
+        message.reply = AsyncMock()
+        message.content = "!pp @TestCardinal 100"
+        message.channel = channel
+
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+
+        message.mentions = [member]
+        
+        test_cardinal = Cardinal(member)
+        test_cardinal.id = 1111111111
+        test_cardinal_list = [test_cardinal]
+        
+        with patch('src.actions.check_for_pope_change', mock_check_for_pope_change), patch("src.utils.cardinal_list", test_cardinal_list), \
+            patch("builtins.print", mock_print):
+            await process_command(message, client)
+        assert mock_check_for_pope_change.assert_not_called() == None
+        assert mock_print.assert_called_once_with("Cardinal not found") == None
+
+
     async def test_process_command_sin_coins(self):
         # Account for directory differences between test and src
         from src.cardinal import Cardinal
@@ -805,6 +875,67 @@ class ActionsTests(IsolatedAsyncioTestCase):
             await process_command(message, client)
         assert message.reply.assert_called_once_with("You need to enter a number. Format: !SC @user amount") == None
 
+    async def test_process_command_sc_bad_cardinal(self):
+        # Account for directory differences between test and src
+        from src.cardinal import Cardinal
+        sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['cardinal'] = __import__('src.cardinal')
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['utils'].cardinal_list = ['']
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change
+        sys.modules['utils'].author_is_pope = author_is_pope
+        sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
+        sys.modules['utils'].rank_cardinals = rank_cardinals
+        sys.modules['utils'].check_for_pope_change = check_for_pope_change
+        sys.modules['utils'].armageddon = False
+        from src.actions import process_command
+        
+        # Mock discord objects
+        client = AsyncMock()
+        channel = AsyncMock()
+        mock_check_for_pope_change = AsyncMock()
+        mock_print = Mock()
+
+        # Mock message
+        message = AsyncMock()
+        message.reply = AsyncMock()
+        message.content = "!sc @TestCardinal 100"
+        message.channel = channel
+
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+
+        message.mentions = [member]
+        
+        test_cardinal = Cardinal(member)
+        test_cardinal.id = 1111111111
+        test_cardinal_list = [test_cardinal]
+        
+        with patch('src.actions.check_for_pope_change', mock_check_for_pope_change), patch("src.utils.cardinal_list", test_cardinal_list), \
+            patch("builtins.print", mock_print):
+            await process_command(message, client)
+        assert mock_check_for_pope_change.assert_not_called() == None
+        assert mock_print.assert_called_once_with("Cardinal not found") == None
+
+
+    async def test_process_command_cardinals(self):
+        from src.actions import process_command
+
+        # Mock message
+        channel = AsyncMock()
+        message = AsyncMock()
+        message.reply = AsyncMock()
+        message.content = "!cardinals"
+        message.channel = channel
+
+        mock_print_cardinals = AsyncMock()
+        mock_client = AsyncMock()
+        with patch('src.actions.print_cardinals', mock_print_cardinals):
+            await process_command(message, mock_client)
+        assert mock_print_cardinals.assert_called_once_with(channel) == None
 
 if __name__ == '__main__':
     unittest.main()
