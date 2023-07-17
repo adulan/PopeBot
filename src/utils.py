@@ -29,7 +29,7 @@ async def populate_cardinals(client):
     for member in members:
         # if member id does not match any cardinal id, add to cardinal_list
         cur_cardinal = get_member_from_cardinal_list(member)
-        if cur_cardinal is None:
+        if cur_cardinal is None and not member.bot:
             cardinal_list.append(cardinal.Cardinal(member))
         
         if cardinal_role is not None:
