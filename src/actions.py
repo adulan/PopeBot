@@ -123,3 +123,17 @@ async def process_command(message, client):
     
         case "!CARDINALS":
             await print_cardinals(message.channel)
+
+        case "!HELP":
+            fields = []
+            fields.append(["!PP @user ##", "Give pope points to user", False])
+            fields.append(["!SC @user ##", "Give sin coins to user", False])
+            fields.append(["!PopeLiness", "Prints the current standings of the Cardinals", False])
+            fields.append(["!Absolve @user", "The Pope may Absolve user of all sins", False])
+            fields.append(["!Help", "Prints this message", False])
+
+            embed = discord.Embed(description="Commands")
+            for name, value, inline in fields:
+                embed.add_field(name=name, value=value, inline=inline)
+            
+            await message.channel.send(embed=embed)

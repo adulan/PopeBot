@@ -937,5 +937,25 @@ class ActionsTests(IsolatedAsyncioTestCase):
             await process_command(message, mock_client)
         assert mock_print_cardinals.assert_called_once_with(channel) == None
 
+    
+    async def test_process_command_help(self):
+        from src.actions import process_command
+        mock_embeds = Mock()
+
+        # Mock message
+        channel = AsyncMock()
+        message = AsyncMock()
+        message.reply = AsyncMock()
+        message.content = "!help"
+        message.channel = channel
+
+        mock_client = AsyncMock()
+        with patch('discord.Embed', Mock(return_value=mock_embeds)):
+            await process_command(message, mock_client)
+        
+        assert message.channel.send.assert_called_once() == None
+        assert mock_embeds.add_field.call_count == 5
+
+
 if __name__ == '__main__':
     unittest.main()
