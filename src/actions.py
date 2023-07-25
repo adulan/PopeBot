@@ -1,6 +1,6 @@
 import discord
 from utils import cardinal_list, armageddon, author_is_pope, \
-    get_cardinal_by_id, rank_cardinals, check_for_pope_change
+    get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
 
 
 # Function that sets the given user's sin_coins to 0
@@ -124,12 +124,18 @@ async def process_command(message, client):
         case "!CARDINALS":
             await print_cardinals(message.channel)
 
+        case "!SAVE":
+            saved = save_cardinals_json()
+            if saved:
+                await message.reply("Cardinals saved")
+
         case "!HELP":
             fields = []
             fields.append(["!PP @user ##", "Give pope points to user", False])
             fields.append(["!SC @user ##", "Give sin coins to user", False])
             fields.append(["!PopeLiness", "Prints the current standings of the Cardinals", False])
             fields.append(["!Absolve @user", "The Pope may Absolve user of all sins", False])
+            fields.append(["!Save", "Save the current Cardinals to a JSON file", False])
             fields.append(["!Help", "Prints this message", False])
 
             embed = discord.Embed(description="Commands")

@@ -75,9 +75,11 @@ def save_cardinals_json():
             json.dump(cardinal_json, f)
             f.close()
         print("Cardinals saved.")
+        return True
     except Exception as e:
         print("Error: Could not save cardinals.")
         print(e)
+        return False
 
 
 def get_cardinal_by_id(id):
