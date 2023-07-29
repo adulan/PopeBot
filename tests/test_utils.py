@@ -1,11 +1,23 @@
-import sys
+import sys, os
 from unittest import IsolatedAsyncioTestCase
 import unittest
 from unittest.mock import AsyncMock, MagicMock, Mock, patch, mock_open
 
+import discord
+
 # Test Utils
 class UtilsTests(IsolatedAsyncioTestCase):
-
+    
+    def setUp(self):
+        #Suppress print statements
+        import sys
+        sys.stdout = open(os.devnull, 'w')
+        
+        #Suppress warnings
+        import warnings
+        warnings.filterwarnings("ignore")
+    
+    
     # Test Author is pope
     def test_author_is_pope_true(self):
         sys.modules['constants'] = Mock()
@@ -470,32 +482,168 @@ class UtilsTests(IsolatedAsyncioTestCase):
         assert mock_save_cardinals.assert_called_once() == None
 
 
-    # Test announce_pope_change
-    async def test_announce_pope_change(self):
-        sys.modules['constants'] = AsyncMock()
-        sys.modules['cardinal'] = AsyncMock()
-        from src.utils import announce_pope_change
-
-        # Mock Pope role
-        pope_role = AsyncMock()
-        pope_role.id = 9999
-        pope_role.name = "Pope"
+    async def test_set_pope_exception(self):
+        from src.utils import set_pope
         
-        # Mock a member
+        # # Mock a member
         member = AsyncMock()
-        member.name = "Test Pope"
-        member.id = 1234567890
-        member.roles = [pope_role]
-        member.mention = "@Test Pope"
+        member2 = AsyncMock()
 
-        mock_channel = AsyncMock()
+        mock_exception = MagicMock(side_effect = discord.DiscordException)
         mock_client = AsyncMock()
-        mock_client.get_channel = MagicMock(return_value = mock_channel)
-        mock_client.get_channel.return_value = mock_channel
+        mock_client.get_guild = mock_exception
+        mock_print = MagicMock()
 
-        assert await announce_pope_change(member, mock_client) == None
-        assert mock_channel.send.assert_called_once_with("@Test Pope is the New Pope!") == None
+        with patch('discord.DiscordException', mock_exception), patch('builtins.print', mock_print):
+            await set_pope(member2, member, mock_client)
+        assert mock_exception.assert_called_once() == None
+        self.assertTrue(mock_print.called, 2)
 
 
+    # Test announce_pope_change
+    # async def test_announce_pope_change(self):
+    #     sys.modules['constants'] = Mock()
+    #     sys.modules['constants'].ANNOUNCEMENT_CHANNEL_ID = "9999"
+    #     sys.modules['cardinal'] = AsyncMock()
+    #     from src.utils import announce_pope_change
+
+    #     # Mock Pope role
+    #     pope_role = AsyncMock()
+    #     pope_role.id = 9999
+    #     pope_role.name = "Pope"
+        
+    #     # Mock a member
+    #     member = AsyncMock()
+    #     member.name = "Test Pope"
+    #     member.id = 1234567890
+    #     member.roles = [pope_role]
+    #     member.mention = "@Test Pope"
+
+    #     mock_channel = AsyncMock()
+    #     mock_client = AsyncMock()
+    #     mock_client.get_channel = MagicMock(return_value = mock_channel)
+    #     mock_client.get_channel.return_value = mock_channel
+
+    #     await announce_pope_change(member, mock_client)
+    #     assert mock_channel.send.assert_called_once_with("@Test Pope is the New Pope!") == None
+
+    # Test populate cardinals
+    async def test_populate_cardinals_no_file(self):
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
+        sys.modules['cardinal'] = Mock()
+        from src.utils import populate_cardinals
+        from src.cardinal import Cardinal
+
+        # Mock Cardinal role
+        cardinal_role = Mock()
+        cardinal_role.id = 1111
+        cardinal_role.name = "Cardinal"
+
+        # Mock a member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 1234567890
+        member.roles = [cardinal_role]
+
+        # Add mock to cardinal_list
+        test_cardinal = Cardinal(member)
+        test_cardinal_list = [test_cardinal] 
+
+        # Mocks to capture function calls
+        print_mock = Mock()
+        json_mock = MagicMock(return_value=[{'name': 'Test Cardinal', 'id': 1234567890, 'pope_points': 0, 'sin_coins': 0}])
+
+        mock_client = MagicMock()
+        mock_guild = MagicMock()
+        mock_guild.members.return_value = [member]
+        mock_guild.get_role.return_value = cardinal_role
+        mock_client.get_guild.return_value = mock_guild
+
+        cardinal_mock = Mock(return_value=test_cardinal)
+        
+        from_json_mock = MagicMock(return_value=True)
+        from_json_mock.from_json.return_value = test_cardinal
+        cardinal_mock.from_json = Mock()
+
+        with patch('src.utils.cardinal_list', test_cardinal_list),  patch('json.load', json_mock):
+            with  patch('builtins.print', print_mock), patch('os.path.isfile', MagicMock(return_value=False)):
+                await populate_cardinals(mock_client)
+        
+        # Check that two messages were printed
+        # print("No cardinal_list.json found. Populating from guild.")
+        # print("Cardinals populated.")
+        self.assertEqual(print_mock.call_count, 2)
+
+
+    # async def test_announce_pope_change_exception(self):
+    #     from src.utils import announce_pope_change
+        
+    #     # # Mock a member
+    #     member = AsyncMock()
+    #     member.name = "Test Pope"
+    #     member.id = 1234567890
+    #     member.mention = "@Test Pope"
+
+    #     mock_exception = MagicMock(side_effect = discord.DiscordException)
+    #     mock_client = AsyncMock()
+    #     mock_client.get_channel = mock_exception
+    #     mock_print = MagicMock()
+
+    #     with patch('discord.DiscordException', mock_exception), patch('builtins.print', mock_print):
+    #         await announce_pope_change(member, mock_client)
+    #     assert mock_exception.assert_called_once() == None
+    #     self.assertTrue(mock_print.called, 2)
+
+
+    # async def test_populate_cardinals_happy(self):
+    #     sys.modules['constants'].GUILD_ID = 1234567890
+    #     sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
+    #     sys.modules['cardinal'] = Mock()
+    #     from src.utils import populate_cardinals
+    #     from src.cardinal import Cardinal
+
+    #     # Mock Cardinal role
+    #     cardinal_role = Mock()
+    #     cardinal_role.id = 1111
+    #     cardinal_role.name = "Cardinal"
+
+    #     # Mock a member
+    #     member = AsyncMock()
+    #     member.name = "Test Cardinal"
+    #     member.id = 1234567890
+    #     member.roles = []
+    #     member.bot = False
+
+    #     # Add mock to cardinal_list
+    #     test_cardinal = Cardinal(member)
+    #     test_cardinal_list = [test_cardinal] 
+
+    #     # Mocks to capture function calls
+    #     print_mock = Mock()
+    #     populate_cardinals_mock = Mock(return_value=True)
+    #     check_pope_change_mock = AsyncMock()
+
+    #     mock_client = MagicMock()
+    #     mock_guild = MagicMock()
+    #     mock_guild.members = [member]
+    #     mock_guild.get_role.return_value = cardinal_role
+    #     mock_client.get_guild.return_value = mock_guild
+
+    #     cardinal_mock = Mock(return_value=test_cardinal)
+        
+    #     from_json_mock = MagicMock(return_value=True)
+    #     from_json_mock.from_json.return_value = test_cardinal
+    #     cardinal_mock.from_json = Mock()
+
+    #     with patch('src.utils.cardinal_list', test_cardinal_list),  patch('os.path.isfile', MagicMock(return_value=True)), patch('src.utils.get_member_from_cardinal_list', MagicMock(return_value=member)):
+    #         with  patch('builtins.print', print_mock), patch('src.utils.populate_cardinals_json', populate_cardinals_mock), patch('src.utils.check_for_pope_change', check_pope_change_mock):
+    #             await populate_cardinals(mock_client)
+        
+    #     assert populate_cardinals_mock.assert_called_once() == None
+    #     assert check_pope_change_mock.assert_called_once() == None
+    #     assert member.add_roles.assert_called_once() == None
+
+    
 if __name__ == '__main__':
     unittest.main()

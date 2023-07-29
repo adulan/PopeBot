@@ -1,5 +1,5 @@
 import constants, cardinal
-import discord, json, os
+import json, os
 
 
 cardinal_list = []
@@ -37,7 +37,7 @@ async def populate_cardinals(client):
                 if not member_has_role(member, cardinal_role.id):
                     await member.add_roles(cardinal_role)
                     print(f"Assigned {member.name} to Cardinals Role")
-            except discord.DiscordException as e:
+            except Exception as e:
                 print(f"Error: Could not assign {member.name} to Cardinals Role")
                 print(e)
             
@@ -52,6 +52,7 @@ def populate_cardinals_json(guild):
             cardinal_json = json.load(f)
             f.close()
         counter = 0
+        cardinal_list.clear()
         for element in cardinal_json:
             member = guild.get_member(element["id"])
             cur_cardinal = cardinal.Cardinal(member)
@@ -59,9 +60,11 @@ def populate_cardinals_json(guild):
             cardinal_list.append(cur_cardinal)
             counter += 1
         print(f"{counter} Cardinals populated from json.")
+        return True
     except Exception as e:
         print("Error: Could not populate cardinals from json.")
         print(e)
+        return False
 
 
 # Save cardinals in cardinal_list to json file
@@ -148,7 +151,7 @@ async def set_pope(new_pope, old_pope, client):
         pope_changed = True
         await announce_pope_change(new_pope, client)
         save_cardinals_json()
-    except discord.DiscordException as e:
+    except Exception as e:
         print("Error: Could not set pope role")
         print(e)
     return pope_changed
@@ -158,7 +161,7 @@ async def announce_pope_change(member, client):
     try:
         channel = client.get_channel(constants.ANNOUNCEMENT_CHANNEL_ID)
         await channel.send(f"{member.mention} is the New Pope!")
-    except discord.DiscordException as e:
+    except Exception as e:
         print("Error: Could not announce pope change")
         print(e)
         

@@ -1,10 +1,20 @@
-import unittest
+import unittest, os
 from unittest.mock import Mock
 from src import cardinal
 
 
 class CardinalTests(unittest.TestCase):
     
+    def setUp(self):
+        #Suppress print statements
+        import sys
+        sys.stdout = open(os.devnull, 'w')
+        
+        #Suppress warnings
+        import warnings
+        warnings.filterwarnings("ignore")
+
+
     # Test Cardinal Initialization
     def test_cardinal_init(self):
         member = Mock()

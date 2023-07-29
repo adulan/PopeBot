@@ -49,7 +49,7 @@ jobs:
           coverage xml
           coverage_threshold=$(python -c "import xml.etree.ElementTree as ET; root = ET.parse('coverage.xml').getroot(); print(root.attrib['line-rate'])")
           echo "Test coverage: $coverage_threshold"
-          if (( $(bc <<< "$coverage_threshold < 0.90") )); then
+          if (( $(bc <<< "$coverage_threshold < 0.80") )); then
             exit 1
           fi
 

@@ -21,11 +21,15 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_actions_absolve(self, mock_getenv):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
         sys.modules['utils'].rank_cardinals = rank_cardinals
@@ -60,10 +64,14 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_print_standings(self):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"        
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -98,10 +106,14 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_print_standings_with_empty_list(self):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"        
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -126,7 +138,9 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -162,10 +176,14 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_print_cardinals_with_empty_list(self):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"        
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -187,10 +205,14 @@ class ActionsTests(IsolatedAsyncioTestCase):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"        
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -236,10 +258,14 @@ class ActionsTests(IsolatedAsyncioTestCase):
         from src.cardinal import Cardinal
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"        
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -294,10 +320,14 @@ class ActionsTests(IsolatedAsyncioTestCase):
         from src.cardinal import Cardinal
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"        
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -341,7 +371,9 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -365,10 +397,14 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_armageddon(self):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -393,10 +429,13 @@ class ActionsTests(IsolatedAsyncioTestCase):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -439,10 +478,13 @@ class ActionsTests(IsolatedAsyncioTestCase):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -486,10 +528,14 @@ class ActionsTests(IsolatedAsyncioTestCase):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -532,10 +578,14 @@ class ActionsTests(IsolatedAsyncioTestCase):
         from src.cardinal import Cardinal
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -579,7 +629,9 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -617,7 +669,9 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -655,7 +709,9 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -694,10 +750,13 @@ class ActionsTests(IsolatedAsyncioTestCase):
         from src.cardinal import Cardinal
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['constants'].GUILD_ID = 1234567890
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -741,6 +800,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         from src.cardinal import Cardinal
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
@@ -785,10 +846,14 @@ class ActionsTests(IsolatedAsyncioTestCase):
         from src.cardinal import Cardinal
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -823,10 +888,14 @@ class ActionsTests(IsolatedAsyncioTestCase):
         from src.cardinal import Cardinal
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -861,10 +930,14 @@ class ActionsTests(IsolatedAsyncioTestCase):
         from src.cardinal import Cardinal
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
@@ -902,10 +975,14 @@ class ActionsTests(IsolatedAsyncioTestCase):
         from src.cardinal import Cardinal
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
-        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+        from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, \
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
         sys.modules['utils'].get_cardinal_by_id = get_cardinal_by_id
         sys.modules['utils'].rank_cardinals = rank_cardinals
@@ -945,6 +1022,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
 
     async def test_process_command_cardinals(self):
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         from src.actions import process_command
 
         # Mock message
@@ -962,6 +1041,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     
     async def test_process_command_help(self):
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         from src.actions import process_command
         mock_embeds = Mock()
 
@@ -982,6 +1063,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     
     async def test_process_command_save(self):
         sys.modules['utils'] = __import__('src.utils')
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         from src.utils import save_cardinals_json
         from src.actions import process_command
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -1002,5 +1084,204 @@ class ActionsTests(IsolatedAsyncioTestCase):
         assert message.reply.assert_called_once_with("Cardinals saved") == None
 
 
+    async def test_process_command_load(self):
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
+        from src.utils import populate_cardinals_json
+        from src.actions import process_command
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
+        
+        mock_client = AsyncMock()
+        mock_load = MagicMock()
+        channel = MagicMock()
+
+        # Mock discord member
+        member1 = Mock()
+        member1.name = "Test Cardinal 1"
+        member1.id = 1234567890
+
+        # Mock discord member
+        member2 = Mock()
+        member2.name = "Test Cardinal 2"
+        member2.id = 2468101214
+
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!load"
+        message1.channel = channel
+        message1.author = member1
+
+        # Mock message
+        message2 = MagicMock()
+        message2.reply = AsyncMock()
+        message2.content = "!load"
+        message2.channel = channel
+        message2.author = member2
+
+        channel.history.return_value = AsyncIterator(message1, message2)
+        
+        with patch('src.actions.populate_cardinals_json', mock_load):
+            await process_command(message1, mock_client)
+        assert mock_load.assert_called_once() == None
+        assert message1.reply.assert_called_once_with("Cardinals loaded") == None
+
+
+    async def test_process_command_load_not_double(self):
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
+        from src.utils import populate_cardinals_json
+        from src.actions import process_command
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
+        
+        mock_client = AsyncMock()
+        mock_load = MagicMock()
+        channel = MagicMock()
+        mock_print = Mock()
+
+        # Mock discord member
+        member1 = Mock()
+        member1.name = "Test Cardinal 1"
+        member1.id = 1234567890
+
+        # Mock discord member
+        member2 = Mock()
+        member2.name = "Test Cardinal 2"
+        member2.id = 2468101214
+
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!load"
+        message1.channel = channel
+        message1.author = member1
+
+        # Mock message
+        message2 = MagicMock()
+        message2.reply = AsyncMock()
+        message2.content = "!test"
+        message2.channel = channel
+        message2.author = member2
+
+        channel.history.return_value = AsyncIterator(message1, message2)
+        
+        with patch('src.actions.populate_cardinals_json', mock_load), patch('builtins.print', mock_print):
+            await process_command(message1, mock_client)
+        assert mock_load.assert_not_called() == None
+        assert message1.reply.assert_not_called() == None
+        assert mock_print.assert_called_once_with("Need two members to load Cardinals") == None
+
+
+    async def test_process_command_load_same_author(self):
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
+        from src.utils import populate_cardinals_json
+        from src.actions import process_command
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
+        
+        mock_client = AsyncMock()
+        mock_load = MagicMock()
+        channel = MagicMock()
+        mock_print = Mock()
+
+        # Mock discord member
+        member1 = Mock()
+        member1.name = "Test Cardinal 1"
+        member1.id = 1234567890
+
+        # Mock discord member
+        member2 = Mock()
+        member2.name = "Test Cardinal 2"
+        member2.id = 2468101214
+
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!load"
+        message1.channel = channel
+        message1.author = member1
+
+        # Mock message
+        message2 = MagicMock()
+        message2.reply = AsyncMock()
+        message2.content = "!load"
+        message2.channel = channel
+        message2.author = member1
+
+        channel.history.return_value = AsyncIterator(message1, message2)
+        
+        with patch('src.actions.populate_cardinals_json', mock_load), patch('builtins.print', mock_print):
+            await process_command(message1, mock_client)
+        assert mock_load.assert_not_called() == None
+        assert message1.reply.assert_not_called() == None
+        assert mock_print.assert_called_once_with("Need two members to load Cardinals") == None
+
+
+    async def test_process_command_load_no_json(self):
+        sys.modules['utils'] = __import__('src.utils')
+        sys.modules['constants'].GUILD_ID = 1234567890
+        sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
+        from src.utils import populate_cardinals_json
+        from src.actions import process_command
+        sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
+        
+        mock_client = AsyncMock()
+        mock_load = MagicMock()
+        mock_load.return_value = False
+        channel = MagicMock()
+        mock_print = Mock()
+
+        # Mock discord member
+        member1 = Mock()
+        member1.name = "Test Cardinal 1"
+        member1.id = 1234567890
+
+        # Mock discord member
+        member2 = Mock()
+        member2.name = "Test Cardinal 2"
+        member2.id = 2468101214
+
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!load"
+        message1.channel = channel
+        message1.author = member1
+
+        # Mock message
+        message2 = MagicMock()
+        message2.reply = AsyncMock()
+        message2.content = "!load"
+        message2.channel = channel
+        message2.author = member2
+
+        channel.history.return_value = AsyncIterator(message1, message2)
+        
+        with patch('src.actions.populate_cardinals_json', mock_load), patch('builtins.print', mock_print):
+            await process_command(message1, mock_client)
+        assert mock_load.assert_called_once() == None
+        assert message1.reply.assert_not_called() == None
+        assert mock_print.assert_called_once_with("Error: Could not load Cardinals") == None
+
+
 if __name__ == '__main__':
     unittest.main()
+
+class AsyncIterator:
+    def __init__(self, *args):
+        self.args = args
+        self.index = 0
+
+    def __aiter__(self):
+        return self
+
+    async def __anext__(self):
+        if self.index < len(self.args):
+            result = self.args[self.index]
+            self.index += 1
+            return result
+        else:
+            raise StopAsyncIteration

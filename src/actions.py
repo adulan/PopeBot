@@ -1,6 +1,8 @@
+import os
 import discord
 from utils import cardinal_list, armageddon, author_is_pope, \
-    get_cardinal_by_id, rank_cardinals, check_for_pope_change, save_cardinals_json
+    get_cardinal_by_id, populate_cardinals_json, rank_cardinals, check_for_pope_change, save_cardinals_json
+from constants import GUILD_ID, CARDINAL_LIST_FILE
 
 
 # Function that sets the given user's sin_coins to 0
@@ -128,6 +130,22 @@ async def process_command(message, client):
             saved = save_cardinals_json()
             if saved:
                 await message.reply("Cardinals saved")
+
+        case "!LOAD":
+            guild = client.get_guild(GUILD_ID)
+            
+            # Require double confirmation to load Cardinals
+            channel_history = [message async for message in message.channel.history(limit=2)]
+            if len(channel_history) == 2:
+                previous_message = channel_history[1]
+                if previous_message.content.upper() == "!LOAD" and message.author.id != previous_message.author.id:
+                    if populate_cardinals_json(guild):
+                        await message.reply("Cardinals loaded")
+                    else:
+                        print("Error: Could not load Cardinals")
+                else:
+                    print("Need two members to load Cardinals")
+
 
         case "!HELP":
             fields = []
