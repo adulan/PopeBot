@@ -529,6 +529,9 @@ class UtilsTests(IsolatedAsyncioTestCase):
     # Test announce_pope_change
     async def test_announce_pope_change(self):
         sys.modules['constants'] = Mock()
+        sys.modules['utils'].CARDINAL_ROLE_ID = "9999"
+        sys.modules['utils'].HABEMUS_IMAGE_FILE = "/test/image.png"
+        sys.modules['utils'].WHITE_SMOKE_FILE = "/test/image.png"
         sys.modules['utils'].ANNOUNCEMENT_CHANNEL_ID = "9999"
         sys.modules['cardinal'] = AsyncMock()
         from src.utils import announce_pope_change
@@ -549,9 +552,71 @@ class UtilsTests(IsolatedAsyncioTestCase):
         mock_client = AsyncMock()
         mock_client.get_channel = MagicMock(return_value = mock_channel)
         mock_client.get_channel.return_value = mock_channel
+        mock_change = AsyncMock()
+        mock_image = AsyncMock()
 
-        await announce_pope_change(member, mock_client)
-        assert mock_channel.send.assert_called_once_with("@Test Pope is the New Pope!") == None
+        with patch("src.utils.change_guild_icon", mock_change), patch('discord.File', MagicMock(return_value= mock_image)), \
+            patch("asyncio.sleep", MagicMock(return_value = None)):
+            await announce_pope_change(member, mock_client)
+        assert mock_channel.send.assert_called_once_with("Habemus Papam!\n@Test Pope is the new pope!", file=mock_image) == None
+        self.assertTrue(mock_change.call_count, 2)
+
+
+    async def test_announce_pope_change_mentions(self):
+        sys.modules['constants'] = Mock()
+        sys.modules['utils'].CARDINAL_ROLE_ID = "9999"
+        sys.modules['utils'].HABEMUS_IMAGE_FILE = "/test/image.png"
+        sys.modules['utils'].WHITE_SMOKE_FILE = "/test/image.png"
+        sys.modules['utils'].ANNOUNCEMENT_CHANNEL_ID = "9999"
+        sys.modules['cardinal'] = AsyncMock()
+        from src.utils import announce_pope_change, mention_cardinals
+
+        # Mock Pope role
+        pope_role = AsyncMock()
+        pope_role.id = 9999
+        pope_role.name = "Pope"
+        
+        # Mock a member
+        member = AsyncMock()
+        member.name = "Test Pope"
+        member.id = 1234567890
+        member.roles = [pope_role]
+        member.mention = "@Test Pope"
+
+        mock_channel = AsyncMock()
+        mock_client = AsyncMock()
+        mock_client.get_channel = MagicMock(return_value = mock_channel)
+        mock_client.get_channel.return_value = mock_channel
+        mock_change = AsyncMock()
+        mock_image = AsyncMock()
+
+        with patch("src.utils.change_guild_icon", mock_change), patch('discord.File', MagicMock(return_value= mock_image)), \
+            patch("src.utils.mention_cardinals", MagicMock(return_value = True)), patch("asyncio.sleep", MagicMock(return_value = None)):
+            await announce_pope_change(member, mock_client)
+        assert mock_channel.send.assert_called_once_with("<@&9999> Habemus Papam!\n@Test Pope is the new pope!", file=mock_image) == None
+        self.assertTrue(mock_change.call_count, 2)
+   
+   
+    async def test_announce_pope_change_exception(self):
+        from src.utils import announce_pope_change
+        
+        # # Mock a member
+        member = AsyncMock()
+        member.name = "Test Pope"
+        member.id = 1234567890
+        member.mention = "@Test Pope"
+
+        mock_channel = AsyncMock()
+        mock_channel.send = Exception
+
+        mock_client = AsyncMock()
+        mock_client.get_channel = mock_channel
+        mock_print = MagicMock()
+
+        with patch('builtins.print', mock_print), patch("asyncio.sleep", MagicMock(return_value = None)):
+            self.assertRaises(Exception, await announce_pope_change(member, mock_client))
+        assert mock_client.get_channel.assert_called_once() == None
+        self.assertEqual(mock_print.call_count, 4)
 
 
     # Test populate cardinals
@@ -599,28 +664,6 @@ class UtilsTests(IsolatedAsyncioTestCase):
         # print("No cardinal_list.json found. Populating from guild.")
         # print("Cardinals populated.")
         self.assertEqual(print_mock.call_count, 2)
-
-
-    async def test_announce_pope_change_exception(self):
-        from src.utils import announce_pope_change
-        
-        # # Mock a member
-        member = AsyncMock()
-        member.name = "Test Pope"
-        member.id = 1234567890
-        member.mention = "@Test Pope"
-
-        mock_channel = AsyncMock()
-        mock_channel.send = Exception
-
-        mock_client = AsyncMock()
-        mock_client.get_channel = mock_channel
-        mock_print = MagicMock()
-
-        with  patch('builtins.print', mock_print):
-            self.assertRaises(Exception, await announce_pope_change(member, mock_client))
-        assert mock_client.get_channel.assert_called_once() == None
-        self.assertEqual(mock_print.call_count, 2)
 
 
     async def test_populate_cardinals_happy(self):
@@ -672,6 +715,67 @@ class UtilsTests(IsolatedAsyncioTestCase):
         assert member.add_roles.assert_called_once() == None
         self.assertTrue(print_mock.call_count, 2)
 
+
+    async def test_change_guild_icon(self):
+        sys.modules['utils'].GUILD_ID = 1234567890
+        from src.utils import change_guild_icon
+
+        mock_client = MagicMock()
+        mock_guild = MagicMock()
+        mock_client.get_guild.return_value = mock_guild
+        mock_image = AsyncMock()
+
+        with patch('builtins.open', mock_open(read_data="icon")) as mock_file:
+            await change_guild_icon(mock_client, mock_image)
+        assert mock_guild.edit.assert_called_once_with(icon="icon") == None
+        assert mock_file.assert_called_once_with(mock_image, 'rb') == None
+
+    async def test_change_guild_icon_exception(self):
+        sys.modules['utils'].GUILD_ID = 1234567890
+        from src.utils import change_guild_icon
+        
+        mock_client = MagicMock()
+        mock_guild = MagicMock()
+        mock_client.get_guild.return_value = mock_guild
+
+        mock_image = AsyncMock()
+        mock_print = Mock()
+
+        with patch('builtins.print', mock_print):
+            self.assertRaises(Exception, await change_guild_icon(mock_client, mock_image))
+        self.assertTrue(mock_print.call_count, 2) == None
+
+
+    def test_get_habemus_image(self):
+        sys.modules['utils'].HABEMUS_IMAGE_PATH = "test/image.png"
+        from src.utils import get_habemus_image
+
+        with patch('builtins.open', mock_open(read_data="icon")) as mock_file:
+            assert get_habemus_image() == "icon"
+        assert mock_file.assert_called_once_with('/test/image.png', 'rb') == None
+
     
+    def test_get_habemus_image_exception(self):
+        sys.modules['utils'].HABEMUS_IMAGE_PATH = "test/image.png"
+        from src.utils import get_habemus_image
+
+        mock_print = Mock()
+
+        with patch('builtins.print', mock_print):
+            self.assertRaises(Exception, get_habemus_image())
+        self.assertTrue(mock_print.call_count, 2) == None
+
+
+    def test_set_mention_cardinals(self):
+        from src.utils import set_mention_cardinals
+        
+        set_mention_cardinals(True)
+        from src.utils import mention_cardinals
+        self.assertTrue(mention_cardinals, True)
+
+        set_mention_cardinals(False)
+        from src.utils import mention_cardinals
+        assert mention_cardinals == False
+        
 if __name__ == '__main__':
     unittest.main()

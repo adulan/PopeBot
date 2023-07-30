@@ -1,8 +1,7 @@
-import os
 import discord
-from utils import cardinal_list, armageddon, author_is_pope, \
+from utils import cardinal_list, armageddon, author_is_pope, set_mention_cardinals, \
     get_cardinal_by_id, populate_cardinals_json, rank_cardinals, check_for_pope_change, save_cardinals_json
-from constants import GUILD_ID, CARDINAL_LIST_FILE
+from constants import GUILD_ID, CARDINAL_ROLE_ID
 
 
 # Function that sets the given user's sin_coins to 0
@@ -66,6 +65,7 @@ async def process_command(message, client):
         case "!ARMAGEDDON":
             armageddon = True
             await message.channel.send("Armageddon has begun.")
+        
         case "!RAPTURE":
             if armageddon and author_is_pope(message):
                 await message.channel.send("Prepare for the Rapture!")
@@ -146,7 +146,6 @@ async def process_command(message, client):
                 else:
                     print("Need two members to load Cardinals")
 
-
         case "!HELP":
             fields = []
             fields.append(["!PP @user ##", "Give pope points to user", False])
@@ -154,6 +153,7 @@ async def process_command(message, client):
             fields.append(["!PopeLiness", "Prints the current standings of the Cardinals", False])
             fields.append(["!Absolve @user", "The Pope may Absolve user of all sins", False])
             fields.append(["!Save", "Save the current Cardinals to a JSON file", False])
+            fields.append(["!Mention [True|False]", "Sets mentioning Cardinals during Habemus Papam", False])
             fields.append(["!Help", "Prints this message", False])
 
             embed = discord.Embed(description="Commands")
@@ -161,3 +161,14 @@ async def process_command(message, client):
                 embed.add_field(name=name, value=value, inline=inline)
             
             await message.channel.send(embed=embed)
+
+        case "!MENTION":
+            if len(message_content) != 2:
+                await message.reply("Format: !Mention [True|False]")
+                return
+            if message_content[1].upper() == "TRUE" and CARDINAL_ROLE_ID is not None:
+                set_mention_cardinals(True)
+                print("Mentioning Cardinals during Habemus Papam")
+            else:
+                set_mention_cardinals(False)
+                print("Habemus Papam will not mention Cardinals")

@@ -1,9 +1,11 @@
+import discord
 import constants, cardinal
-import json, os
+import asyncio, json, os
 
 
 cardinal_list = []
 armageddon = False
+mention_cardinals = False
 
 def author_is_pope(message):
     author = message.author
@@ -160,8 +162,45 @@ async def set_pope(new_pope, old_pope, client):
 async def announce_pope_change(member, client):
     try:
         channel = client.get_channel(constants.ANNOUNCEMENT_CHANNEL_ID)
-        await channel.send(f"{member.mention} is the New Pope!")
+        await change_guild_icon(client, constants.WHITE_SMOKE_FILE)
+        habemus_image = discord.File(constants.HABEMUS_IMAGE_FILE, "habemus.png")
+        if mention_cardinals:
+            msg = f"<@&{constants.CARDINAL_ROLE_ID}> Habemus Papam!\n{member.mention} is the new pope!"
+        else:
+            msg = f"Habemus Papam!\n{member.mention} is the new pope!"
+        await channel.send(msg, file=habemus_image)
+
+        await asyncio.sleep(600)
+        await change_guild_icon(client, constants.BLACK_SMOKE_FILE)
     except Exception as e:
         print("Error: Could not announce pope change")
         print(e)
         
+
+async def change_guild_icon(client, image_file):
+    guild = client.get_guild(constants.GUILD_ID)
+    try:
+        with open(image_file, "rb") as f:
+            image = f.read()
+        await guild.edit(icon = image)
+        f.close()
+    except Exception as e:
+        print("Error: Could not change guild icon")
+        print(e)
+
+
+def get_habemus_image():
+    try:
+        with open(constants.HABEMUS_IMAGE_FILE, "rb") as f:
+            habemus_image = f.read()
+        f.close()
+        return habemus_image
+    except Exception as e:
+        print("Error: Could not get habemus image")
+        print(e)
+        return None
+    
+
+def set_mention_cardinals(mention_bool):
+    global mention_cardinals
+    mention_cardinals = mention_bool
