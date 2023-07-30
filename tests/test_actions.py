@@ -21,6 +21,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_actions_absolve(self, mock_getenv):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].GUILD_ID = 1234567890
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
@@ -66,6 +67,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_print_standings(self):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].GUILD_ID = 1234567890
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"        
@@ -110,6 +112,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_print_standings_with_empty_list(self):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].GUILD_ID = 1234567890
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"        
@@ -140,6 +143,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_print_cardinals(self):
         # Account for directory differences between test and src
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
@@ -184,6 +188,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_print_cardinals_with_empty_list(self):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].GUILD_ID = 1234567890
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"        
@@ -214,6 +219,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_absolve_happy_pope_path(self):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].POPE_ROLE_ID = 9999
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
         sys.modules['constants'].GUILD_ID = 1234567890
@@ -268,6 +274,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_absolve_happy_path_not_pope(self):
         # Account for directory differences between test and src
         from src.cardinal import Cardinal
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
@@ -331,7 +338,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_absolve_pope_bad_mention(self):
         # Account for directory differences between test and src
-        from src.cardinal import Cardinal
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
@@ -383,6 +390,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_popeliness(self):
         # Account for directory differences between test and src
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
@@ -414,6 +422,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_armageddon(self):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].GUILD_ID = 1234567890
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
@@ -447,6 +456,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_rapture_armageddon_not_active(self):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].POPE_ROLE_ID = 9999
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
@@ -498,6 +508,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_rapture_armageddon_not_pope(self):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].POPE_ROLE_ID = 9999
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
@@ -550,6 +561,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_rapture(self):
         # Account for directory differences between test and src
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].POPE_ROLE_ID = 9999
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
         sys.modules['constants'].GUILD_ID = 1234567890
@@ -601,6 +613,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_pope_points(self):
         # Account for directory differences between test and src
         from src.cardinal import Cardinal
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
@@ -650,7 +663,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_pp_bad_mention(self):
         # Account for directory differences between test and src
-        from src.cardinal import Cardinal
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
         sys.modules['cardinal'] = __import__('src.cardinal')
@@ -691,7 +704,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_pp_bad_format(self):
         # Account for directory differences between test and src
-        from src.cardinal import Cardinal
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
         sys.modules['cardinal'] = __import__('src.cardinal')
@@ -734,6 +747,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         # Account for directory differences between test and src
         from src.cardinal import Cardinal
         sys.modules['constants'] = __import__('src.constants')
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].POPE_ROLE_ID = 9999
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
@@ -778,6 +792,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_pope_points_bad_cardinal(self):
         # Account for directory differences between test and src
         from src.cardinal import Cardinal
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
@@ -1014,6 +1029,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_sc_bad_cardinal(self):
         # Account for directory differences between test and src
         from src.cardinal import Cardinal
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
@@ -1065,6 +1081,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
 
     async def test_process_command_cardinals(self):
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].GUILD_ID = 1234567890
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         from src.actions import process_command
@@ -1084,6 +1101,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     
     async def test_process_command_help(self):
+        sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].GUILD_ID = 1234567890
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         from src.actions import process_command
@@ -1107,6 +1125,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_save(self):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
+        sys.modules['bible_verses'] = Mock()
         from src.utils import save_cardinals_json
         from src.actions import process_command
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -1128,6 +1147,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
 
     async def test_process_command_load(self):
+        sys.modules['bible_verses'] = Mock()
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['constants'].GUILD_ID = 1234567890
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
@@ -1172,6 +1192,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
 
     async def test_process_command_load_not_double(self):
+        sys.modules['bible_verses'] = Mock()
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['constants'].GUILD_ID = 1234567890
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
@@ -1218,6 +1239,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
 
     async def test_process_command_load_same_author(self):
+        sys.modules['bible_verses'] = Mock()
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['constants'].GUILD_ID = 1234567890
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
@@ -1264,6 +1286,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
 
     async def test_process_command_load_no_json(self):
+        sys.modules['bible_verses'] = Mock()
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['constants'].GUILD_ID = 1234567890
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
@@ -1312,7 +1335,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_mention_true(self):
         from src.actions import process_command
-        
+        sys.modules['bible_verses'] = Mock()
+
         # Mock message
         message1 = MagicMock()
         message1.reply = AsyncMock()
@@ -1329,7 +1353,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_mention_false(self):
         from src.actions import process_command
-        
+        sys.modules['bible_verses'] = Mock()
         # Mock message
         message1 = MagicMock()
         message1.reply = AsyncMock()

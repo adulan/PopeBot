@@ -2,3 +2,4 @@
 omit =
     tests/*
     src/pope_mobile.py
+    src/bible_verses.py
