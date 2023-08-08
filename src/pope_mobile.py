@@ -2,6 +2,7 @@ import datetime, discord
 from constants import DISCORD_TOKEN
 from utils import populate_cardinals
 from actions import process_command
+from bible_verses import check_reference
 
 # Define the Discord client with intents
 intents = discord.Intents.default()
@@ -29,6 +30,11 @@ async def on_message(message):
     # check if the message is a command
     if message.content.startswith("!"):
         await process_command(message, client)
+
+    # check if the message is a bible reference
+    reference = check_reference(message.content)
+    if reference != False:
+        await message.channel.send(reference)
 
 
 # Run the client with the Discord API token

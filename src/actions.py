@@ -2,7 +2,7 @@ import discord
 from utils import cardinal_list, armageddon, author_is_pope, set_mention_cardinals, \
     get_cardinal_by_id, populate_cardinals_json, rank_cardinals, check_for_pope_change, save_cardinals_json
 from constants import GUILD_ID, CARDINAL_ROLE_ID
-from bible_verses import get_bible_verse
+from bible_verses import get_random_verse
 
 
 # Function that sets the given user's sin_coins to 0
@@ -24,13 +24,13 @@ async def print_standings(channel):
         fields = [("Cardinals", "\n".join([f"{cardinal.name}: {'{:.2E}'.format(cardinal.popeliness())}" for cardinal in cardinal_ranks]), False)]
         for name, value, inline in fields:
             embed.add_field(name=name, value=value, inline=inline)
-        # embed.set_footer(text=get_bible_verse())
+        embed.set_footer(text=get_random_verse())
         await channel.send(embed=embed)
 
 
 async def print_cardinals(channel):
     embed = discord.Embed(description="The current Cardinals of the Vatican")
-    # embed.set_footer(text=get_bible_verse())
+    embed.set_footer(text=get_random_verse())
     if len(cardinal_list) > 0:
         fields = [("Cardinals", "\n".join([f"{cardinal.name}: {'{:.2E}'.format(cardinal.pope_points)}, {'{:.2E}'.format(cardinal.sin_coins)} " for cardinal in cardinal_list]), False)]
         for name, value, inline in fields:
@@ -173,7 +173,7 @@ async def process_command(message, client):
             fields.append(["!Pope-Help", "Prints this message", False])
 
             embed = discord.Embed(description="Commands")
-            # embed.set_footer(text=get_bible_verse())
+            embed.set_footer(text=get_random_verse())
             for name, value, inline in fields:
                 embed.add_field(name=name, value=value, inline=inline)
             
