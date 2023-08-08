@@ -14,13 +14,21 @@ class Cardinal:
     # add pope points
     def add_pope_points(self, amount):
         self.pope_points += amount
-        print(f"{self.name} received {amount} pope points")
+        if self.pope_points > 4611686018427387903:
+            self.pope_points = 1000000
+            print(f"{self.name} pope points reset to 1000000")
+        else:
+            print(f"{self.name} received {amount} pope points")
 
 
     # add sin coins
     def add_sin_coins(self, amount):
         self.sin_coins += amount
-        print(f"{self.name} received {amount} sin coins")
+        if self.sin_coins > 4611686018427387903:
+            self.sin_coins = 1000000
+            print(f"{self.name} sin coins reset to 1000000")
+        else:
+            print(f"{self.name} received {amount} sin coins")
 
 
     # calculate popliness

@@ -532,6 +532,7 @@ class UtilsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].CARDINAL_ROLE_ID = "9999"
         sys.modules['utils'].HABEMUS_IMAGE_FILE = "/test/image.png"
         sys.modules['utils'].WHITE_SMOKE_FILE = "/test/image.png"
+        sys.modules['utils'].BLACK_SMOKE_FILE = "/test/black.png"
         sys.modules['utils'].ANNOUNCEMENT_CHANNEL_ID = "9999"
         sys.modules['cardinal'] = AsyncMock()
         from src.utils import announce_pope_change
@@ -569,7 +570,7 @@ class UtilsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].WHITE_SMOKE_FILE = "/test/image.png"
         sys.modules['utils'].ANNOUNCEMENT_CHANNEL_ID = "9999"
         sys.modules['cardinal'] = AsyncMock()
-        from src.utils import announce_pope_change, mention_cardinals
+        from src.utils import announce_pope_change
 
         # Mock Pope role
         pope_role = AsyncMock()
@@ -668,8 +669,8 @@ class UtilsTests(IsolatedAsyncioTestCase):
 
     async def test_populate_cardinals_happy(self):
         sys.modules['utils'].GUILD_ID = 1234567890
-        sys.modules['utils'].CARDINAL_ROLE_ID = 1234567890
-        sys.modules['cardinal'] = Mock()
+        sys.modules['utils'].CARDINAL_ROLE_ID = 1111
+        sys.modules['cardinal'].Cardinal = Mock()
         from src.utils import populate_cardinals
         from src.cardinal import Cardinal
 
@@ -685,6 +686,13 @@ class UtilsTests(IsolatedAsyncioTestCase):
         member.roles = []
         member.bot = False
 
+        # Mock a member
+        member2 = AsyncMock()
+        member2.name = "Test Cardinal 2"
+        member2.id = 2468101214
+        member2.roles = [cardinal_role]
+        member2.bot = False
+
         # Add mock to cardinal_list
         test_cardinal = Cardinal(member)
         test_cardinal_list = [test_cardinal] 
@@ -696,7 +704,7 @@ class UtilsTests(IsolatedAsyncioTestCase):
 
         mock_client = MagicMock()
         mock_guild = MagicMock()
-        mock_guild.members = [member]
+        mock_guild.members = [member, member2]
         mock_guild.get_role.return_value = cardinal_role
         mock_client.get_guild.return_value = mock_guild
 
@@ -706,8 +714,8 @@ class UtilsTests(IsolatedAsyncioTestCase):
         from_json_mock.from_json.return_value = test_cardinal
         cardinal_mock.from_json = Mock()
 
-        with patch('src.utils.cardinal_list', test_cardinal_list),  patch('os.path.isfile', MagicMock(return_value=True)), patch('src.utils.get_member_from_cardinal_list', MagicMock(return_value=member)):
-            with  patch('builtins.print', print_mock), patch('src.utils.populate_cardinals_json', populate_cardinals_mock), patch('src.utils.check_for_pope_change', check_pope_change_mock):
+        with patch('src.utils.cardinal_list', test_cardinal_list),  patch('os.path.isfile', MagicMock(return_value=True)), patch('src.utils.populate_cardinals_json', populate_cardinals_mock):
+            with  patch('builtins.print', print_mock), patch('src.utils.check_for_pope_change', check_pope_change_mock):
                 await populate_cardinals(mock_client)
         
         assert populate_cardinals_mock.assert_called_once() == None

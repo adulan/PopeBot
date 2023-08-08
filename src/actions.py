@@ -21,7 +21,7 @@ async def print_standings(channel):
     cardinal_ranks = rank_cardinals()
     
     if len(cardinal_ranks) > 0:
-        fields = [("Cardinals", "\n".join([f"{cardinal.name}: {cardinal.popeliness()}" for cardinal in cardinal_ranks]), False)]
+        fields = [("Cardinals", "\n".join([f"{cardinal.name}: {'{:.2E}'.format(cardinal.popeliness())}" for cardinal in cardinal_ranks]), False)]
         for name, value, inline in fields:
             embed.add_field(name=name, value=value, inline=inline)
         # embed.set_footer(text=get_bible_verse())
@@ -32,7 +32,7 @@ async def print_cardinals(channel):
     embed = discord.Embed(description="The current Cardinals of the Vatican")
     # embed.set_footer(text=get_bible_verse())
     if len(cardinal_list) > 0:
-        fields = [("Cardinals", "\n".join([f"{cardinal.name}: {cardinal.pope_points}, {cardinal.sin_coins} " for cardinal in cardinal_list]), False)]
+        fields = [("Cardinals", "\n".join([f"{cardinal.name}: {'{:.2E}'.format(cardinal.pope_points)}, {'{:.2E}'.format(cardinal.sin_coins)} " for cardinal in cardinal_list]), False)]
         for name, value, inline in fields:
             embed.add_field(name=name, value=value, inline=inline)
         await channel.send(embed=embed)
@@ -95,8 +95,16 @@ async def process_command(message, client):
                 if not amount.isdigit():
                     await message.reply("You need to enter a number. Format: !PP @user amount")
                 else:
+                    author = get_cardinal_by_id(message.author.id)
                     amount = int(amount)
-                    cardinal.add_pope_points(amount)
+                    if amount > 1000000:
+                        await message.reply("You can't give more than 1 million Pope Points at a time.")
+                        if author is not None:
+                            author.add_sin_coins(25)
+                    else:
+                        if author == cardinal and amount > 50 and not author_is_pope(message):
+                            author.add_sin_coins(amount/2)
+                        cardinal.add_pope_points(amount)
                     await check_for_pope_change(client)
             else:
                 await message.reply("You need to mention someone to give them Pope Points. Format: !PP @user amount")
@@ -120,7 +128,13 @@ async def process_command(message, client):
                     await message.reply("You need to enter a number. Format: !SIN @user amount")
                 else:
                     amount = int(amount)
-                    cardinal.add_sin_coins(amount)
+                    if amount > 1000000:
+                        await message.reply("You can't give more than 1 million Sin Coins at a time.")
+                        author = get_cardinal_by_id(message.author.id)
+                        if author is not None:
+                            author.add_sin_coins(1000000)
+                    else:
+                        cardinal.add_sin_coins(amount)
                     await check_for_pope_change(client)
             else:
                 await message.reply("You need to mention someone to give them Sin Coins. Format: !SIN @user amount")
@@ -148,7 +162,7 @@ async def process_command(message, client):
                 else:
                     print("Need two members to load Cardinals")
 
-        case "!HELP":
+        case "!POPE-HELP":
             fields = []
             fields.append(["!PP @user ##", "Give pope points to user", False])
             fields.append(["!SIN @user ##", "Give sin coins to user", False])
@@ -156,7 +170,7 @@ async def process_command(message, client):
             fields.append(["!Absolve @user", "The Pope may Absolve user of all sins", False])
             fields.append(["!Save", "Save the current Cardinals to a JSON file", False])
             fields.append(["!Mention [True|False]", "Sets mentioning Cardinals during Habemus Papam", False])
-            fields.append(["!Help", "Prints this message", False])
+            fields.append(["!Pope-Help", "Prints this message", False])
 
             embed = discord.Embed(description="Commands")
             # embed.set_footer(text=get_bible_verse())

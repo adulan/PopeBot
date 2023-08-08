@@ -39,6 +39,17 @@ class CardinalTests(unittest.TestCase):
         test_cardinal.add_pope_points(5)
         assert test_cardinal.pope_points == 15
 
+    
+    def test_cardinal_add_pope_points_overflow(self):
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 1234567890
+        test_cardinal = cardinal.Cardinal(member)
+        test_cardinal.add_pope_points(4611686018427387903)
+        assert test_cardinal.pope_points == 4611686018427387903
+        test_cardinal.add_pope_points(1)
+        assert test_cardinal.pope_points == 1000000
+
 
     # Test Cardinal add_sin_coins
     def test_cardinal_add_sin_coins(self):
@@ -50,6 +61,17 @@ class CardinalTests(unittest.TestCase):
         assert test_cardinal.sin_coins == 10
         test_cardinal.add_sin_coins(5)
         assert test_cardinal.sin_coins == 15
+
+
+    def test_cardinal_add_sin_coins_overflow(self):
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 1234567890
+        test_cardinal = cardinal.Cardinal(member)
+        test_cardinal.add_sin_coins(4611686018427387903)
+        assert test_cardinal.sin_coins == 4611686018427387903
+        test_cardinal.add_sin_coins(1)
+        assert test_cardinal.sin_coins == 1000000
 
 
     # Test Cardinal popeliness
