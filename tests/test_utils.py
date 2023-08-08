@@ -712,7 +712,6 @@ class UtilsTests(IsolatedAsyncioTestCase):
         
         assert populate_cardinals_mock.assert_called_once() == None
         assert check_pope_change_mock.assert_called_once() == None
-        assert member.add_roles.assert_called_once() == None
         self.assertTrue(print_mock.call_count, 2)
 
 

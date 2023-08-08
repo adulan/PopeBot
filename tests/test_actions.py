@@ -872,7 +872,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         # Mock message
         message = AsyncMock()
         message.reply = AsyncMock()
-        message.content = "!Sc @TestCardinal 50"
+        message.content = "!Sin @TestCardinal 50"
         message.channel = channel
 
         # Mock discord member
@@ -921,7 +921,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         # Mock message
         message = AsyncMock()
         message.reply = AsyncMock()
-        message.content = "!sC @bad 0"
+        message.content = "!siN @bad 0"
         message.channel = channel
         
         # Mock discord member
@@ -932,7 +932,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         message.mentions = []
         
         await process_command(message, client)
-        assert message.reply.assert_called_once_with("You need to mention someone to give them Sin Coins. Format: !SC @user amount") == None
+        assert message.reply.assert_called_once_with("You need to mention someone to give them Sin Coins. Format: !SIN @user amount") == None
 
 
     async def test_process_command_sc_bad_format(self):
@@ -965,7 +965,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         # Mock message
         message = AsyncMock()
         message.reply = AsyncMock()
-        message.content = "!sc"
+        message.content = "!sin"
         message.channel = channel
         
         # Mock discord member
@@ -976,7 +976,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         message.mentions = []
         
         await process_command(message, client)
-        assert message.reply.assert_called_once_with("Format: !SC @user amount") == None
+        assert message.reply.assert_called_once_with("Format: !SIN @user amount") == None
 
 
     async def test_process_command_sc_bad_amount(self):
@@ -1009,7 +1009,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         # Mock message
         message = AsyncMock()
         message.reply = AsyncMock()
-        message.content = "!SC @TestCardinal a"
+        message.content = "!SIN @TestCardinal a"
         message.channel = channel
 
         # Mock discord member
@@ -1024,7 +1024,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         
         with patch('src.utils.cardinal_list', test_cardinal_list):
             await process_command(message, client)
-        assert message.reply.assert_called_once_with("You need to enter a number. Format: !SC @user amount") == None
+        assert message.reply.assert_called_once_with("You need to enter a number. Format: !SIN @user amount") == None
 
     async def test_process_command_sc_bad_cardinal(self):
         # Account for directory differences between test and src
@@ -1059,7 +1059,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         # Mock message
         message = AsyncMock()
         message.reply = AsyncMock()
-        message.content = "!sc @TestCardinal 100"
+        message.content = "!sin @TestCardinal 100"
         message.channel = channel
 
         # Mock discord member

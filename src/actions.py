@@ -101,10 +101,10 @@ async def process_command(message, client):
             else:
                 await message.reply("You need to mention someone to give them Pope Points. Format: !PP @user amount")
 
-        case "!SC":
+        case "!SIN":
             # check if the message has two parameters
             if len(message_content) != 3:
-                await message.reply("Format: !SC @user amount")
+                await message.reply("Format: !SIN @user amount")
                 return
             if len(message.mentions) > 0:
                 user = message.mentions[0]
@@ -117,13 +117,13 @@ async def process_command(message, client):
                 amount = message.content.split(" ")[2]
                 # check if amount is a number
                 if not amount.isdigit():
-                    await message.reply("You need to enter a number. Format: !SC @user amount")
+                    await message.reply("You need to enter a number. Format: !SIN @user amount")
                 else:
                     amount = int(amount)
                     cardinal.add_sin_coins(amount)
                     await check_for_pope_change(client)
             else:
-                await message.reply("You need to mention someone to give them Sin Coins. Format: !SC @user amount")
+                await message.reply("You need to mention someone to give them Sin Coins. Format: !SIN @user amount")
     
         case "!CARDINALS":
             await print_cardinals(message.channel)
@@ -151,7 +151,7 @@ async def process_command(message, client):
         case "!HELP":
             fields = []
             fields.append(["!PP @user ##", "Give pope points to user", False])
-            fields.append(["!SC @user ##", "Give sin coins to user", False])
+            fields.append(["!SIN @user ##", "Give sin coins to user", False])
             fields.append(["!PopeLiness", "Prints the current standings of the Cardinals", False])
             fields.append(["!Absolve @user", "The Pope may Absolve user of all sins", False])
             fields.append(["!Save", "Save the current Cardinals to a JSON file", False])

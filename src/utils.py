@@ -31,17 +31,8 @@ async def populate_cardinals(client):
     for member in members:
         # if member id does not match any cardinal id, add to cardinal_list
         cur_cardinal = get_member_from_cardinal_list(member)
-        if cur_cardinal is None and not member.bot:
+        if cur_cardinal is None and not member.bot and member_has_role(member, cardinal_role.id):
             cardinal_list.append(cardinal.Cardinal(member))
-        
-        if cardinal_role is not None:
-            try:
-                if not member_has_role(member, cardinal_role.id):
-                    await member.add_roles(cardinal_role)
-                    print(f"Assigned {member.name} to Cardinals Role")
-            except Exception as e:
-                print(f"Error: Could not assign {member.name} to Cardinals Role")
-                print(e)
             
     print("Cardinals populated.")
 
