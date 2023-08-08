@@ -24,13 +24,13 @@ async def print_standings(channel):
         fields = [("Cardinals", "\n".join([f"{cardinal.name}: {cardinal.popeliness()}" for cardinal in cardinal_ranks]), False)]
         for name, value, inline in fields:
             embed.add_field(name=name, value=value, inline=inline)
-        embed.set_footer(text=get_bible_verse())
+        # embed.set_footer(text=get_bible_verse())
         await channel.send(embed=embed)
 
 
 async def print_cardinals(channel):
     embed = discord.Embed(description="The current Cardinals of the Vatican")
-    embed.set_footer(text=get_bible_verse())
+    # embed.set_footer(text=get_bible_verse())
     if len(cardinal_list) > 0:
         fields = [("Cardinals", "\n".join([f"{cardinal.name}: {cardinal.pope_points}, {cardinal.sin_coins} " for cardinal in cardinal_list]), False)]
         for name, value, inline in fields:
@@ -159,7 +159,7 @@ async def process_command(message, client):
             fields.append(["!Help", "Prints this message", False])
 
             embed = discord.Embed(description="Commands")
-            embed.set_footer(text=get_bible_verse())
+            # embed.set_footer(text=get_bible_verse())
             for name, value, inline in fields:
                 embed.add_field(name=name, value=value, inline=inline)
             

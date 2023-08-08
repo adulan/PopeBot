@@ -43,13 +43,12 @@ jobs:
       - name: Check test coverage
         run: |
           python -m coverage erase
-          python -m coverage run -m -a unittest tests.test_actions
-          python -m coverage run -m -a unittest tests.test_cardinal
-          python -m coverage run -m -a unittest tests.test_utils
+          python -m coverage run -m -a unittest tests.test_cardinal tests.test_actions tests.test_utils
           coverage xml
           coverage_threshold=$(python -c "import xml.etree.ElementTree as ET; root = ET.parse('coverage.xml').getroot(); print(root.attrib['line-rate'])")
           echo "Test coverage: $coverage_threshold"
-          if (( $(bc <<< "$coverage_threshold < 0.80") )); then
+          if (( $(bc <<< "$coverage_threshold < 0.90") )); then
+            echo "Test coverage is below threshold. Docker image will not be published."
             exit 1
           fi
 

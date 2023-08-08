@@ -18,6 +18,10 @@ It also requires the following Bot Permissions
 
 `Read Messages/View Channels`
 
+`Mention @everyone, @here, and All Roles`
+
+`Attach Files`
+
 ## Run Locally
 
 `docker build --pull --rm -f "Dockerfile" -t popebot:latest "."`
@@ -53,3 +57,18 @@ docker run -it \
 Update environment variables in docker-compose.yml then run
 
 `$ docker compose up -d`
+
+
+## Testing
+
+Run all tests
+
+`$ python -m unittest discover -s tests -p "test_*.py"`
+
+Run coverage report
+
+`$ python -m coverage run -m -a unittest tests.test_cardinal tests.test_actions tests.test_utils`
+
+View coverage report
+
+`$ python -m coverage report -m`
