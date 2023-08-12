@@ -16,8 +16,8 @@ bible_reference_ids = [9006019, 5025011, 60002018, 2021007, 2021008, 3009010, 30
                     4025008, 4025009, 4031009, 5020016, 6011006, 7001017, 7004021, 7007021, 7009005, \
                     7009045, 7011037, 7011038, 7015015, 7018027, 9004010, 9011011, 9015033, 10002023]
 
+# Gets a bible verse from the list of bible reference ids
 def get_selected_bible_verse():
-    # Get a random bible_reference_id
     bible_reference_id = random.choice(bible_reference_ids)
     try:
         text = bible.get_verse_text(bible_reference_id)
@@ -30,6 +30,8 @@ def get_selected_bible_verse():
     return f"{text} - {verse}"
 
 
+# Check if the message is a bible reference
+# if it is, get the verse text and reference
 def check_reference(text):
     try:
         ref = bible.get_references(text)
@@ -40,6 +42,15 @@ def check_reference(text):
         
         verse_text = '"'
         if bible.is_valid_reference(ref):
+            # Check that the reference is actually a reference and not just the book name
+            bible_book = ref.book
+            num_of_chapters = bible.get_number_of_chapters(bible_book)
+            num_of_verses = bible.get_number_of_verses(bible_book, num_of_chapters)
+            
+            if ref.end_chapter == num_of_chapters and ref.end_verse == num_of_verses:
+                return False
+
+            # Get the verse text
             verse_id_list = bible.convert_reference_to_verse_ids(ref)
             for verse_id in verse_id_list:
                 if len(verse_text) + len(bible.get_verse_text(verse_id)) < 1950:

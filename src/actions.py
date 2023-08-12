@@ -1,5 +1,5 @@
 import discord
-from utils import cardinal_list, armageddon, author_is_pope, set_mention_cardinals, \
+from utils import cardinal_list, armageddon, author_is_pope, set_mention_cardinals, add_member_to_cardinal_list, \
     get_cardinal_by_id, populate_cardinals_json, rank_cardinals, check_for_pope_change, save_cardinals_json
 from constants import GUILD_ID, CARDINAL_ROLE_ID
 from bible_verses import get_random_verse
@@ -50,7 +50,7 @@ async def process_command(message, client):
                 await message.reply("Only the Pope can absolve sins!")
                 author = get_cardinal_by_id(message.author.id)
                 if author is not None:
-                    author.add_sin_coins(25)
+                    author.add_sin_coins(250)
                 return
             
             # check if the message has a mention
@@ -189,3 +189,11 @@ async def process_command(message, client):
             else:
                 set_mention_cardinals(False)
                 print("Habemus Papam will not mention Cardinals")
+
+        case "!ADD-CARDINAL":
+            if len(message_content) == 2 and len(message.mentions) > 0:
+                member = message.mentions[0]
+                if add_member_to_cardinal_list(member):
+                    await message.reply(f"{member.name} added to Cardinals")
+                else:
+                    await message.reply(f"{member.name} already a Cardinal")

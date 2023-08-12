@@ -783,6 +783,29 @@ class UtilsTests(IsolatedAsyncioTestCase):
         set_mention_cardinals(False)
         from src.utils import mention_cardinals
         assert mention_cardinals == False
+
+
+    def test_add_member_to_cardinal_list(self):
+        from src.utils import add_member_to_cardinal_list
+        from src.cardinal import Cardinal
+        sys.modules['cardinal'].Cardinal = Cardinal
+
+        # Mock a member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 1234567890
+        member.bot = False
+
+        # Add mock to cardinal_list
+        
+        test_cardinal_list = []
+
+        mock_get_member = Mock(return_value=None)
+
+        with patch('src.utils.cardinal_list', test_cardinal_list), patch('src.utils.get_member_from_cardinal_list', mock_get_member):
+            add_member_to_cardinal_list(member)
+        assert len(test_cardinal_list) == 1
+        assert mock_get_member.assert_called_once_with(member) == None
         
 if __name__ == '__main__':
     unittest.main()

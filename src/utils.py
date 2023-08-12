@@ -195,3 +195,13 @@ def get_habemus_image():
 def set_mention_cardinals(mention_bool):
     global mention_cardinals
     mention_cardinals = mention_bool
+
+
+def add_member_to_cardinal_list(member):
+    global cardinal_list
+    member_cardinal = cardinal.Cardinal(member)
+    member_in_cardinal_list = get_member_from_cardinal_list(member)
+    if member_in_cardinal_list is None and not member.bot:
+        cardinal_list.append(member_cardinal)
+        return True
+    return False
