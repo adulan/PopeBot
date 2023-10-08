@@ -9,7 +9,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
     def setUp(self):
         #Suppress print statements
         import sys
-        sys.stdout = open(os.devnull, 'w')
+       # sys.stdout = open(os.devnull, 'w')
+        
         
         #Suppress warnings
         import warnings
@@ -20,6 +21,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     @patch('os.getenv')
     async def test_actions_absolve(self, mock_getenv):
         # Account for directory differences between test and src
+        import src.exceptions as exceptions
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].GUILD_ID = 1234567890
@@ -29,7 +31,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -39,6 +42,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].rank_cardinals = rank_cardinals
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import absolve
        
         # Setup mock Discord member
@@ -76,7 +85,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -86,6 +95,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
         from src.actions import print_standings
 
         # Mock discord channel
@@ -122,7 +132,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -132,6 +142,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
         from src.actions import print_standings
 
         # Mock discord channel
@@ -146,6 +157,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_print_cardinals(self):
         # Account for directory differences between test and src
+        import src.exceptions as exceptions
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['cardinal'] = __import__('src.cardinal')
@@ -153,7 +165,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -163,6 +176,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import print_cardinals
 
         # Mock discord channel
@@ -191,6 +210,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_print_cardinals_with_empty_list(self):
         # Account for directory differences between test and src
+        import src.exceptions as exceptions
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].GUILD_ID = 1234567890
@@ -200,7 +220,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -210,6 +231,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import print_cardinals
 
         # Mock discord channel
@@ -223,6 +250,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_absolve_happy_pope_path(self):
         # Account for directory differences between test and src
+        import src.exceptions as exceptions
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].POPE_ROLE_ID = 9999
@@ -233,7 +261,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -243,6 +272,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
 
         # Mock discord objects
@@ -279,6 +314,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_absolve_happy_path_not_pope(self):
         # Account for directory differences between test and src
+        import src.exceptions as exceptions
         from src.cardinal import Cardinal
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
@@ -290,7 +326,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -300,6 +337,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -345,6 +388,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_absolve_pope_bad_mention(self):
         # Account for directory differences between test and src
+        import src.exceptions as exceptions
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
@@ -355,7 +399,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -365,6 +410,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -398,13 +449,15 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_popeliness(self):
         # Account for directory differences between test and src
+        import src.exceptions as exceptions
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -414,6 +467,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
 
         # Mock discord objects
@@ -430,6 +489,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_armageddon(self):
         # Account for directory differences between test and src
+        import src.exceptions as exceptions
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].GUILD_ID = 1234567890
@@ -439,7 +499,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -448,7 +509,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].rank_cardinals = rank_cardinals
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
-
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -465,6 +531,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_rapture_armageddon_not_active(self):
         # Account for directory differences between test and src
+        import src.exceptions as exceptions
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].POPE_ROLE_ID = 9999
@@ -474,7 +541,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -484,6 +552,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
 
         # Mock discord objects
@@ -518,6 +592,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_rapture_armageddon_not_pope(self):
         # Account for directory differences between test and src
+        import src.exceptions as exceptions
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].POPE_ROLE_ID = 9999
@@ -527,7 +602,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -537,6 +613,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = True
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
 
         # Mock discord objects
@@ -572,6 +654,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_rapture(self):
         # Account for directory differences between test and src
+        import src.exceptions as exceptions
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].POPE_ROLE_ID = 9999
@@ -582,7 +665,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -592,8 +676,13 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = True
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
-
         # Mock discord objects
         client = AsyncMock()
         channel = AsyncMock()
@@ -626,6 +715,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_pope_points(self):
         # Account for directory differences between test and src
         from src.cardinal import Cardinal
+        import src.exceptions as exceptions
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
@@ -636,7 +726,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -646,6 +737,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -656,7 +753,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         # Mock message
         message = AsyncMock()
         message.reply = AsyncMock()
-        message.content = "!pp @TestCardinal 100"
+        message.content = "!pp @TestCardinal  100"
         message.channel = channel
 
         # Mock discord member
@@ -678,6 +775,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_pope_points_max(self):
         # Account for directory differences between test and src
         from src.cardinal import Cardinal
+        import src.exceptions as exceptions
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
@@ -688,7 +786,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list,\
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -698,6 +797,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -734,6 +839,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_pope_points_self_punishment(self):
         # Account for directory differences between test and src
+        import src.exceptions as exceptions
         from src.cardinal import Cardinal
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
@@ -745,7 +851,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -755,6 +862,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -791,6 +904,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_pp_bad_mention(self):
         # Account for directory differences between test and src
+        import src.exceptions as exceptions
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
@@ -798,7 +912,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -808,6 +923,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -833,6 +954,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_pp_bad_format(self):
         # Account for directory differences between test and src
+        import src.exceptions as exceptions
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
@@ -840,7 +962,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -850,6 +973,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -876,6 +1005,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_pp_bad_amount(self):
         # Account for directory differences between test and src
         from src.cardinal import Cardinal
+        import src.exceptions as exceptions
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'].POPE_ROLE_ID = 9999
@@ -883,7 +1013,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -893,6 +1024,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -923,6 +1060,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_pope_points_bad_cardinal(self):
         # Account for directory differences between test and src
         from src.cardinal import Cardinal
+        import src.exceptions as exceptions
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
@@ -932,7 +1070,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -942,6 +1081,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -977,6 +1122,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_sin_coins(self):
         # Account for directory differences between test and src
         from src.cardinal import Cardinal
+        import src.exceptions as exceptions
+ 
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
@@ -984,9 +1131,10 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         sys.modules['cardinal'] = __import__('src.cardinal')
         sys.modules['utils'] = __import__('src.utils')
+        
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            set_mention_cardinals, check_for_pope_change, save_cardinals_json
+            set_mention_cardinals, check_for_pope_change, save_cardinals_json, active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
@@ -995,6 +1143,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -1027,6 +1181,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     async def test_process_command_sin_coins_max(self):
         # Account for directory differences between test and src
         from src.cardinal import Cardinal
+        import src.exceptions as exceptions
         sys.modules['constants'] = __import__('src.constants')
         sys.modules['constants'].POPE_ROLE_ID = 9999
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
@@ -1036,7 +1191,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            set_mention_cardinals, check_for_pope_change, save_cardinals_json
+            set_mention_cardinals, check_for_pope_change, save_cardinals_json, active_crusade, get_member_from_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
@@ -1045,6 +1200,12 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        
         from src.actions import process_command
         
         # Mock discord objects
@@ -1090,7 +1251,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -1100,6 +1261,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -1135,7 +1297,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -1145,6 +1307,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -1180,7 +1343,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -1190,6 +1353,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].check_for_pope_change = check_for_pope_change
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
+        sys.modules['utils'].active_crusade = active_crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -1218,6 +1382,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
     async def test_process_command_sc_bad_cardinal(self):
         # Account for directory differences between test and src
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
         from src.cardinal import Cardinal
         sys.modules['bible_verses'] = Mock()
         sys.modules['constants'] = __import__('src.constants')
@@ -1229,7 +1395,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
@@ -1239,6 +1405,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
+        sys.modules['utils'].active_crusade = active_crusade
         from src.actions import process_command
         
         # Mock discord objects
@@ -1317,9 +1484,10 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['constants'].CARDINAL_LIST_FILE = "test_cardinals.json"
         sys.modules['bible_verses'] = Mock()
-        from src.utils import save_cardinals_json
+        from src.utils import save_cardinals_json, active_crusade
         from src.actions import process_command
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
+        sys.modules['utils'].active_crusade = active_crusade
         
         mock_client = AsyncMock()
         mock_save = MagicMock()
@@ -1620,6 +1788,126 @@ class ActionsTests(IsolatedAsyncioTestCase):
             await process_command(message1, None)
         assert mock_add_cardinal.assert_called_once() == None
         assert message1.reply.assert_called_once_with("Test Cardinal 1 already a Cardinal") == None
+
+
+    async def test_process_command_crusade(self):
+        import src.exceptions as exceptions
+        from src.utils import get_member_from_cardinal_list
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+        
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!CRUSADE BABYLON JERUSALEM"
+
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
+        member.id = 2468101214
+
+        message1.author = member        
+        
+        test_cardinal = Cardinal(member)
+        test_cardinal.id = 2468101214
+        test_cardinal_list = [test_cardinal]
+
+        mock_crusade = Mock()
+
+        with patch("src.utils.cardinal_list", test_cardinal_list), patch("src.crusade.Crusade", mock_crusade):
+            await process_command(message1, None)
+            assert message1.reply.assert_called_once_with("Test Cardinal declared a Crusade on JERUSALEM from BABYLON") == None
+
+
+    async def test_process_command_crusade_already_set(self):
+        import src.exceptions as exceptions
+        from src.utils import get_member_from_cardinal_list
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+        
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!CRUSADE BABYLON JERUSALEM"
+
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+
+        mock_crusade = Mock()
+        with patch("src.actions.active_crusade", mock_crusade):
+            await process_command(message1, None)
+            assert message1.reply.assert_called_once_with("Crusade already active") == None
+
+
+    async def test_process_command_crusade_bad_format(self):
+        import src.exceptions as exceptions
+        from src.utils import get_member_from_cardinal_list
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+        
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!CRUSADE BABYLON JERUSALEM XX"
+
+        await process_command(message1, None)
+        assert message1.reply.assert_called_once_with("Format: !Crusade <attacking city> <defending city>") == None
+
+
+    async def test_process_command_donate(self):
+        import src.exceptions as exceptions
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+        sys.modules['bible_verses'] = Mock()
+
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!donate BABYLON 100"
+
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+
+        message1.author = member
+
+        test_cardinal = Cardinal(member)
+        test_cardinal.pope_points = 200
+        test_cardinal_list = [test_cardinal]
+
+        test_crusade = Crusade.Crusade("CRUSADE", "BABYLON", "JERUSALEM")
+        global active_crusade
+        active_crusade = test_crusade
+        
+        print(test_cardinal_list[0].id)
+        mock_donate = Mock()
+
+        with patch("src.utils.cardinal_list", test_cardinal_list), patch('src.crusade.get_member_from_cardinal_list', member), patch("src.actions.active_crusade", test_crusade):
+            active_crusade.add_attacking_soldier(test_cardinal)
+            await process_command(message1, None)
+        print(test_crusade.attacking_funding)
+        assert test_crusade.attacking_army == test_cardinal_list
+        assert test_crusade.attacking_funding == 100
+        assert test_cardinal.pope_points == 100
+
+        assert message1.reply.assert_called_once_with("100 Pope Points donated to BABYLON by Test Cardinal") == None
 
 
 if __name__ == '__main__':

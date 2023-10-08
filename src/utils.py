@@ -4,6 +4,7 @@ import asyncio, json, os
 
 
 cardinal_list = []
+active_crusade = None
 armageddon = False
 mention_cardinals = False
 

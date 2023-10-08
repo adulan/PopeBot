@@ -1,9 +1,10 @@
 import discord
-from utils import cardinal_list, armageddon, author_is_pope, set_mention_cardinals, add_member_to_cardinal_list, \
+from utils import cardinal_list, armageddon, active_crusade, author_is_pope, set_mention_cardinals, add_member_to_cardinal_list, \
     get_cardinal_by_id, populate_cardinals_json, rank_cardinals, check_for_pope_change, save_cardinals_json
 from constants import GUILD_ID, CARDINAL_ROLE_ID
 from bible_verses import get_random_verse
-
+from crusade import Crusade
+import exceptions
 
 # Function that sets the given user's sin_coins to 0
 async def absolve(user, channel):
@@ -40,7 +41,8 @@ async def print_cardinals(channel):
 
 async def process_command(message, client):
     global armageddon
-    message_content = message.content.split(" ")
+    global active_crusade
+    message_content = message.content.split()
     message_command = message_content[0].upper()
 
     match message_command:
@@ -90,7 +92,7 @@ async def process_command(message, client):
                     return
                 
                 # Get the number of points to add
-                amount = message.content.split(" ")[2]
+                amount = message_content[2]
                 # check if amount is a number
                 if not amount.isdigit():
                     await message.reply("You need to enter a number. Format: !PP @user amount")
@@ -122,7 +124,7 @@ async def process_command(message, client):
                     return
                 
                 # Get the number of points to add
-                amount = message.content.split(" ")[2]
+                amount = message_content[2]
                 # check if amount is a number
                 if not amount.isdigit():
                     await message.reply("You need to enter a number. Format: !SIN @user amount")
@@ -197,3 +199,57 @@ async def process_command(message, client):
                     await message.reply(f"{member.name} added to Cardinals")
                 else:
                     await message.reply(f"{member.name} already a Cardinal")
+
+        case "!CRUSADE":
+            if len(message_content) == 3:
+                attacking_city = message_content[1].upper()
+                defending_city = message_content[2].upper()
+                
+                if active_crusade is None:
+                    active_crusade = Crusade("Crusade", attacking_city, defending_city)
+                    active_crusade.add_attacking_soldier(get_cardinal_by_id(message.author.id))
+                    active_crusade.set_attacking_general(get_cardinal_by_id(message.author.id))
+                    await message.reply(f"{message.author.display_name} declared a Crusade on {defending_city} from {attacking_city}!")
+                else:
+                    await message.reply(f"Crusade already active")
+                    print(f"Active Crusade {active_crusade.name}")
+                    print(active_crusade.attacking_city, active_crusade.defending_city)
+            else:
+                await message.reply(f"Format: !Crusade <attacking city> <defending city>")
+
+        case "!DONATE":
+            if len(message_content) == 3:
+                city = message_content[1].upper()
+                amount = message_content[2]
+                if not amount.isdigit():
+                    await message.reply("You need to enter a number. Format: !Donate <city> amount")
+                    return
+                amount = int(amount)
+                user = message.author
+                cardinal = get_cardinal_by_id(user.id)
+                if cardinal is None:
+                    print("Cardinal not found")
+                    return
+                
+                if active_crusade is not None:
+                    try:
+                        active_crusade.add_funds(city, cardinal, amount)
+                        await message.reply(f"{amount} Pope Points donated to {city} by {message.author.name}")
+                    except exceptions.CityNotInCrusade as e:
+                        await message.reply(f"{e}")
+                    except exceptions.CardinalAlreadyDeployed as e:
+                        await message.reply(f"{e}")
+                    except exceptions.MemberNotCardinal as e:
+                        await message.reply(f"{e}")
+                    except exceptions.NotEnoughPopePoints as e:
+                        await message.reply(f"{e}")
+                    print(f"Active Crusade {active_crusade.name}")
+                    print(active_crusade.attacking_city, active_crusade.defending_city)
+                    print(f"Attacking Army: {active_crusade.attacking_army}")
+                    print(f"Defending Army: {active_crusade.defending_army}")
+                    print(f"Attacking Funding: {active_crusade.attacking_funding}")
+                    print(f"Attacking General: {active_crusade.attacking_general}")
+                    print(f"Attacking Army Strength: {active_crusade.attacking_army_strength()}")
+                else:
+                    await message.reply(f"No active Crusade")
+            
