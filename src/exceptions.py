@@ -1,5 +1,3 @@
-
-#Member not on team Exception
 class CardinalAlreadyDeployed(Exception):
     pass
 

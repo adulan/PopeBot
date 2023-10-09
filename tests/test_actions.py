@@ -2,6 +2,7 @@ import unittest, os, sys
 from unittest import IsolatedAsyncioTestCase
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
 from src.cardinal import Cardinal
+from src.exceptions import MemberNotCardinal
 
 
 class ActionsTests(IsolatedAsyncioTestCase):
@@ -9,7 +10,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
     def setUp(self):
         #Suppress print statements
         import sys
-       # sys.stdout = open(os.devnull, 'w')
+        sys.stdout = open(os.devnull, 'w')
         
         
         #Suppress warnings
@@ -1790,7 +1791,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         assert message1.reply.assert_called_once_with("Test Cardinal 1 already a Cardinal") == None
 
 
-    async def test_process_command_crusade(self):
+    async def test_process_command_mcrusade(self):
         import src.exceptions as exceptions
         from src.utils import get_member_from_cardinal_list
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
@@ -1821,10 +1822,10 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
         with patch("src.utils.cardinal_list", test_cardinal_list), patch("src.crusade.Crusade", mock_crusade):
             await process_command(message1, None)
-            assert message1.reply.assert_called_once_with("Test Cardinal declared a Crusade on JERUSALEM from BABYLON") == None
+            assert message1.reply.assert_called_once_with("Test Cardinal declared a Crusade on JERUSALEM from BABYLON!") == None
 
 
-    async def test_process_command_crusade_already_set(self):
+    async def test_process_command_mcrusade_already_set(self):
         import src.exceptions as exceptions
         from src.utils import get_member_from_cardinal_list
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
@@ -1850,7 +1851,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
             assert message1.reply.assert_called_once_with("Crusade already active") == None
 
 
-    async def test_process_command_crusade_bad_format(self):
+    async def test_process_command_mcrusade_bad_format(self):
         import src.exceptions as exceptions
         from src.utils import get_member_from_cardinal_list
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
@@ -1869,7 +1870,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         assert message1.reply.assert_called_once_with("Format: !Crusade <attacking city> <defending city>") == None
 
 
-    async def test_process_command_donate(self):
+    async def test_process_command_mdonate(self):
         import src.exceptions as exceptions
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
@@ -1885,6 +1886,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         member = Mock()
         member.name = "Test Cardinal"
         member.id = 2468101214
+        member.roles = []
 
         message1.author = member
 
@@ -1896,18 +1898,218 @@ class ActionsTests(IsolatedAsyncioTestCase):
         global active_crusade
         active_crusade = test_crusade
         
+        
+        print(test_cardinal_list[0].id)
+        mock_donate = Mock()
+
+ 
         print(test_cardinal_list[0].id)
         mock_donate = Mock()
 
         with patch("src.utils.cardinal_list", test_cardinal_list), patch('src.crusade.get_member_from_cardinal_list', member), patch("src.actions.active_crusade", test_crusade):
             active_crusade.add_attacking_soldier(test_cardinal)
             await process_command(message1, None)
-        print(test_crusade.attacking_funding)
+
         assert test_crusade.attacking_army == test_cardinal_list
         assert test_crusade.attacking_funding == 100
         assert test_cardinal.pope_points == 100
 
         assert message1.reply.assert_called_once_with("100 Pope Points donated to BABYLON by Test Cardinal") == None
+
+
+    async def test_process_command_mdonate_opposing_side(self):
+
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+        sys.modules['bible_verses'] = Mock()
+
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!donate JERUSALEM 100"
+
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+        member.roles = []
+
+        message1.author = member
+
+        test_cardinal = Cardinal(member)
+        test_cardinal.pope_points = 200
+        test_cardinal_list = [test_cardinal]
+
+        test_crusade = Crusade.Crusade("CRUSADE", "BABYLON", "JERUSALEM")
+        global active_crusade
+        active_crusade = test_crusade
+ 
+        with patch("src.utils.cardinal_list", test_cardinal_list), patch('src.crusade.get_member_from_cardinal_list', member), patch("src.actions.active_crusade", test_crusade):
+            active_crusade.add_attacking_soldier(test_cardinal)
+            await process_command(message1, None)
+
+        assert message1.reply.assert_called_once_with("You can't fund the enemy army.") == None
+
+
+    async def test_process_command_mdonate_bad_city(self):
+
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+        sys.modules['bible_verses'] = Mock()
+
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!donate TUCSON 100"
+
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+        member.roles = []
+
+        message1.author = member
+
+        test_cardinal = Cardinal(member)
+        test_cardinal.pope_points = 200
+        test_cardinal_list = [test_cardinal]
+
+        test_crusade = Crusade.Crusade("CRUSADE", "BABYLON", "JERUSALEM")
+        global active_crusade
+        active_crusade = test_crusade
+ 
+        with patch("src.utils.cardinal_list", test_cardinal_list), patch('src.crusade.get_member_from_cardinal_list', member), patch("src.actions.active_crusade", test_crusade):
+            active_crusade.add_attacking_soldier(test_cardinal)
+            await process_command(message1, None)
+
+        assert message1.reply.assert_called_once_with("You can't fund a city that is not in this crusade.") == None
+
+
+    async def test_process_command_mdonate_bad_amount(self):
+
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+        sys.modules['bible_verses'] = Mock()
+
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!donate BABYLON 1000"
+
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+        member.roles = []
+
+        message1.author = member
+
+        test_cardinal = Cardinal(member)
+        test_cardinal.pope_points = 200
+        test_cardinal_list = [test_cardinal]
+
+        test_crusade = Crusade.Crusade("CRUSADE", "BABYLON", "JERUSALEM")
+        global active_crusade
+        active_crusade = test_crusade
+ 
+        with patch("src.utils.cardinal_list", test_cardinal_list), patch('src.crusade.get_member_from_cardinal_list', member), patch("src.actions.active_crusade", test_crusade):
+            active_crusade.add_attacking_soldier(test_cardinal)
+            await process_command(message1, None)
+
+        assert message1.reply.assert_called_once_with("You don't have enough pope points to fund this crusade.") == None
+
+
+    async def test_process_command_mdonate_not_cardinal(self):
+
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+
+        sys.modules['bible_verses'] = Mock()
+
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!donate BABYLON 1000"
+
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+        member.roles = []
+
+        message1.author = member
+
+        test_cardinal = Cardinal(member)
+        test_cardinal.pope_points = 200
+        test_cardinal_list = []
+
+        test_crusade = Crusade.Crusade("CRUSADE", "BABYLON", "JERUSALEM")
+        global active_crusade
+        active_crusade = test_crusade
+
+        with patch("src.utils.cardinal_list", test_cardinal_list),  patch("src.actions.active_crusade", test_crusade), self.assertRaises(Exception) as context:
+                await process_command(message1, None)
+                self.assertTrue(MemberNotCardinal in str(context.exception))
+ 
+
+    async def test_process_command_mdonate_no_crusade(self):
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+        sys.modules['bible_verses'] = Mock()
+
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!donate BABYLON 1000"
+
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+        member.roles = []
+
+        message1.author = member
+
+        test_cardinal = Cardinal(member)
+        test_cardinal.pope_points = 200
+        test_cardinal_list = [test_cardinal]
+
+        test_crusade = None
+ 
+        with patch("src.utils.cardinal_list", test_cardinal_list),  patch("src.actions.active_crusade", test_crusade), patch('src.crusade.get_member_from_cardinal_list', member):
+            await process_command(message1, None)
+
+        assert message1.reply.assert_called_once_with("No active Crusade") == None
+
+
+    async def test_process_command_mdonate_bad_amount(self):
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+        sys.modules['bible_verses'] = Mock()
+
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!donate BABYLON abdc"
+
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+        member.roles = []
+
+        message1.author = member
+
+        test_cardinal = Cardinal(member)
+        test_cardinal.pope_points = 200
+        test_cardinal_list = [test_cardinal]
+
+        test_crusade = Crusade.Crusade("CRUSADE", "BABYLON", "JERUSALEM")
+ 
+        with patch("src.utils.cardinal_list", test_cardinal_list),  patch("src.actions.active_crusade", test_crusade), patch('src.crusade.get_member_from_cardinal_list', member):
+            await process_command(message1, None)
+
+        assert message1.reply.assert_called_once_with("You need to enter a number. Format: !Donate <city> amount") == None
 
 
 if __name__ == '__main__':

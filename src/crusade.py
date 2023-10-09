@@ -44,37 +44,46 @@ class Crusade:
         else:
             raise exceptions.CardinalNotDeployed("You can't set a general that is not deployed.")
 
-    def add_attacking_funding(self, cardinal, amount):
-        if cardinal.pope_points < amount:
+    def add_attacking_funding(self, cardinal, funds_sent, funds_used):
+        if cardinal.pope_points < funds_used:
             raise exceptions.NotEnoughPopePoints("You don't have enough pope points to fund this crusade.")
         if cardinal in self.attacking_army:
-            self.attacking_funding += amount
-            cardinal.add_pope_points(-amount)
+                self.attacking_funding += funds_sent
+                cardinal.add_pope_points(-funds_used)
         else:
             if cardinal in self.defending_army:
                 raise exceptions.CardinalAlreadyDeployed("You can't fund the enemy army.")
             else:
                 self.add_attacking_soldier(cardinal)
-                self.attacking_funding += amount
-                cardinal.pope_points -= amount
+                self.attacking_funding += funds_sent
+                cardinal.pope_points -= funds_used
             
 
-    def add_defending_funding(self, cardinal, amount):
+    def add_defending_funding(self, cardinal, funds_sent, funds_used):
         if cardinal in self.defending_army:
-            self.defending_funding += amount
+                self.defending_funding += funds_sent
+                cardinal.add_pope_points(-funds_used)
         else:
             if cardinal in self.attacking_army:
                 raise exceptions.CardinalAlreadyDeployed("You can't fund the enemy army.")
             else:
-                self.add_defending_soldier(cardinal)
-                self.defending_funding += amount
+                    self.add_defending_soldier(cardinal)
+                    self.defending_funding += funds_sent
+                    cardinal.add_pope_points(-funds_used)
 
 
-    def add_funds(self, city, cardinal, amount):
+    def add_funds(self, city, cardinal, amount, pope_is_funding):
+        if pope_is_funding:
+            funds_sent = 3*amount
+            funds_used = amount/2
+        else:
+            funds_sent = amount
+            funds_used = amount
+        
         if city == self.attacking_city:
-            self.add_attacking_funding(cardinal, amount)
+            self.add_attacking_funding(cardinal, funds_sent, funds_used)
         elif city == self.defending_city:
-            self.add_defending_funding(cardinal, amount)
+            self.add_defending_funding(cardinal, funds_sent, funds_used)
         else:
             raise exceptions.CityNotInCrusade("You can't fund a city that is not in this crusade.")
 
@@ -89,6 +98,8 @@ class Crusade:
         strength = 0
         for cardinal in self.attacking_army:
             strength += cardinal.popeliness() - cardinal.sin_coins
+        if self.attacking_army_size() == 0:
+            return 0
         strength += self.attacking_funding/self.attacking_army_size()
 
         return log(strength, 2)
@@ -97,6 +108,8 @@ class Crusade:
         strength = 0
         for cardinal in self.defending_army:
             strength += cardinal.popeliness() - cardinal.sin_coins
+        if self.defending_army_size() == 0:
+            return 0
         strength += self.defending_funding/self.defending_army_size()
 
         return log(strength, 2)

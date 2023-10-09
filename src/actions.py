@@ -233,7 +233,7 @@ async def process_command(message, client):
                 
                 if active_crusade is not None:
                     try:
-                        active_crusade.add_funds(city, cardinal, amount)
+                        active_crusade.add_funds(city, cardinal, amount, author_is_pope(message))
                         await message.reply(f"{amount} Pope Points donated to {city} by {message.author.name}")
                     except exceptions.CityNotInCrusade as e:
                         await message.reply(f"{e}")
@@ -243,13 +243,6 @@ async def process_command(message, client):
                         await message.reply(f"{e}")
                     except exceptions.NotEnoughPopePoints as e:
                         await message.reply(f"{e}")
-                    print(f"Active Crusade {active_crusade.name}")
-                    print(active_crusade.attacking_city, active_crusade.defending_city)
-                    print(f"Attacking Army: {active_crusade.attacking_army}")
-                    print(f"Defending Army: {active_crusade.defending_army}")
-                    print(f"Attacking Funding: {active_crusade.attacking_funding}")
-                    print(f"Attacking General: {active_crusade.attacking_general}")
-                    print(f"Attacking Army Strength: {active_crusade.attacking_army_strength()}")
                 else:
-                    await message.reply(f"No active Crusade")
+                    await message.reply("No active Crusade")
             
