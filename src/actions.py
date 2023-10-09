@@ -39,6 +39,25 @@ async def print_cardinals(channel):
         await channel.send(embed=embed)
 
 
+async def print_crusade(channel):
+    embed = discord.Embed(title="Deus Vult", description="The current Holy War")
+    embed.set_footer(text=get_random_verse())
+    if active_crusade is not None:
+        fields = [("Crusade", f"\n{active_crusade.attacking_city} vs {active_crusade.defending_city}", False)]
+        fields.append(("Attacking Army", f"{active_crusade.attacking_city}\nCommanded by: {active_crusade.attacking_general.name}\nSoldiers:" 
+                       + f"\n".join([f"{cardinal.name}" for cardinal in active_crusade.attacking_army if cardinal != active_crusade.attacking_general])
+                       + f"\nFunding: {'{:.2E}'.format(active_crusade.attacking_funding)}"
+                       + f"\nStrength: {'{:.2E}'.format(active_crusade.attacking_army_strength())}", False))
+        defending_general = active_crusade.defending_general.name if active_crusade.defending_general is not None else "None - Claim by donating to the Defense"
+        fields.append(("Defending Army", f"{active_crusade.defending_city}\nCommanded by: {defending_general}\nSoldiers:" 
+                       + f"\n".join([f"{cardinal.name}" for cardinal in active_crusade.defending_army if cardinal != defending_general])
+                       + f"\nFunding: {'{:.2E}'.format(active_crusade.defending_funding)}"
+                       + f"\nStrength: {'{:.2E}'.format(active_crusade.defending_army_strength())}", False))
+        for name, value, inline in fields:
+            embed.add_field(name=name, value=value, inline=inline)
+        await channel.send(embed=embed)
+
+
 async def process_command(message, client):
     global armageddon
     global active_crusade
@@ -173,6 +192,9 @@ async def process_command(message, client):
             fields.append(["!Save", "Save the current Cardinals to a JSON file", False])
             fields.append(["!Mention [True|False]", "Sets mentioning Cardinals during Habemus Papam", False])
             fields.append(["!Pope-Help", "Prints this message", False])
+            fields.append(["!Crusade", "Prints the current Crusade", False])
+            fields.append(["!Crusade <attacking city> <defending city>", "Starts a Crusade", False])
+            fields.append(["!Donate <city> amount", "Donates Pope Points to a Crusade and join that City's Army", False])
 
             embed = discord.Embed(description="Commands")
             embed.set_footer(text=get_random_verse())
@@ -209,11 +231,21 @@ async def process_command(message, client):
                     active_crusade = Crusade("Crusade", attacking_city, defending_city)
                     active_crusade.add_attacking_soldier(get_cardinal_by_id(message.author.id))
                     active_crusade.set_attacking_general(get_cardinal_by_id(message.author.id))
-                    await message.reply(f"{message.author.display_name} declared a Crusade on {defending_city} from {attacking_city}!")
+
+                    embed = discord.Embed(title="Deus Vult")
+                    embed.add_field(name=f"{message.author.display_name} declared a Crusade on {defending_city} from {attacking_city}!", value="", inline=False)
+                    embed.set_footer(text=get_random_verse())
+
+                    await message.channel.send(embed=embed)
                 else:
                     await message.reply(f"Crusade already active")
                     print(f"Active Crusade {active_crusade.name}")
                     print(active_crusade.attacking_city, active_crusade.defending_city)
+            elif len(message_content) == 1:
+                if active_crusade is not None:
+                    await print_crusade(message.channel)
+                else:
+                    await message.reply(f"Format: !Crusade <attacking city> <defending city>")
             else:
                 await message.reply(f"Format: !Crusade <attacking city> <defending city>")
 
@@ -235,6 +267,7 @@ async def process_command(message, client):
                     try:
                         active_crusade.add_funds(city, cardinal, amount, author_is_pope(message))
                         await message.reply(f"{amount} Pope Points donated to {city} by {message.author.name}")
+                        check_for_pope_change(client)
                     except exceptions.CityNotInCrusade as e:
                         await message.reply(f"{e}")
                     except exceptions.CardinalAlreadyDeployed as e:

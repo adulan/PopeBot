@@ -135,7 +135,7 @@ class UtilsTests(IsolatedAsyncioTestCase):
 
         # Mock a member
         member = Mock()
-        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
         member.id = 1234567890
 
         # Add mock to cardinal_list

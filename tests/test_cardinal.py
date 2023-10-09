@@ -18,7 +18,7 @@ class CardinalTests(unittest.TestCase):
     # Test Cardinal Initialization
     def test_cardinal_init(self):
         member = Mock()
-        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
         member.id = 1234567890
         test_cardinal = cardinal.Cardinal(member)
         assert test_cardinal.member == member
@@ -31,7 +31,7 @@ class CardinalTests(unittest.TestCase):
     # Test Cardinal add_pope_points
     def test_cardinal_add_pope_points(self):
         member = Mock()
-        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
         member.id = 1234567890
         test_cardinal = cardinal.Cardinal(member)
         test_cardinal.add_pope_points(10)
@@ -42,7 +42,7 @@ class CardinalTests(unittest.TestCase):
     
     def test_cardinal_add_pope_points_overflow(self):
         member = Mock()
-        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
         member.id = 1234567890
         test_cardinal = cardinal.Cardinal(member)
         test_cardinal.add_pope_points(4611686018427387903)
@@ -54,7 +54,7 @@ class CardinalTests(unittest.TestCase):
     # Test Cardinal add_sin_coins
     def test_cardinal_add_sin_coins(self):
         member = Mock()
-        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
         member.id = 1234567890
         test_cardinal = cardinal.Cardinal(member)
         test_cardinal.add_sin_coins(10)
@@ -65,7 +65,7 @@ class CardinalTests(unittest.TestCase):
 
     def test_cardinal_add_sin_coins_overflow(self):
         member = Mock()
-        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
         member.id = 1234567890
         test_cardinal = cardinal.Cardinal(member)
         test_cardinal.add_sin_coins(4611686018427387903)
@@ -77,7 +77,7 @@ class CardinalTests(unittest.TestCase):
     # Test Cardinal popeliness
     def test_cardinal_popeliness(self):
         member = Mock()
-        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
         member.id = 1234567890
         test_cardinal = cardinal.Cardinal(member)
         
@@ -101,7 +101,7 @@ class CardinalTests(unittest.TestCase):
     # Test Cardinal to_json
     def test_cardinal_to_json(self):
         member = Mock()
-        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
         member.id = 1234567890
         test_cardinal = cardinal.Cardinal(member)
         test_cardinal.add_pope_points(10)
@@ -117,7 +117,7 @@ class CardinalTests(unittest.TestCase):
     # Test Cardinal from_json
     def test_cardinal_from_json(self):
         member = Mock()
-        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
         member.id = 1234567890
         
         test_cardinal = cardinal.Cardinal(member)

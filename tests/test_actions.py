@@ -1478,7 +1478,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
             await process_command(message, mock_client)
         
         assert message.channel.send.assert_called_once() == None
-        assert mock_embeds.add_field.call_count == 7
+        assert mock_embeds.add_field.call_count == 10
 
     
     async def test_process_command_save(self):
@@ -1802,9 +1802,11 @@ class ActionsTests(IsolatedAsyncioTestCase):
         from src.actions import process_command
         
         # Mock message
-        message1 = MagicMock()
+        mock_channel = AsyncMock()
+        message1 = AsyncMock()
         message1.reply = AsyncMock()
         message1.content = "!CRUSADE BABYLON JERUSALEM"
+        message1.channel = mock_channel
 
         # Mock discord member
         member = Mock()
@@ -1822,7 +1824,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
         with patch("src.utils.cardinal_list", test_cardinal_list), patch("src.crusade.Crusade", mock_crusade):
             await process_command(message1, None)
-            assert message1.reply.assert_called_once_with("Test Cardinal declared a Crusade on JERUSALEM from BABYLON!") == None
+            assert mock_channel.send.assert_called_once() == None
 
 
     async def test_process_command_mcrusade_already_set(self):

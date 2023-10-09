@@ -29,6 +29,8 @@ class Crusade:
     def add_defending_soldier(self, cardinal):
         if get_member_from_cardinal_list(cardinal.member) is not None:
             self.defending_army.append(cardinal)
+            if self.defending_general is None:
+                self.set_defending_general(cardinal)
         else:
             raise exceptions.MemberNotCardinal("You can't add a soldier that is not a cardinal.")
 
@@ -101,7 +103,8 @@ class Crusade:
         if self.attacking_army_size() == 0:
             return 0
         strength += self.attacking_funding/self.attacking_army_size()
-
+        if strength == 0:
+            return 0
         return log(strength, 2)
     
     def defending_army_strength(self):
@@ -111,7 +114,8 @@ class Crusade:
         if self.defending_army_size() == 0:
             return 0
         strength += self.defending_funding/self.defending_army_size()
-
+        if strength == 0:
+            return 0
         return log(strength, 2)
     
     def soldier_is_deployed(self, cardinal):

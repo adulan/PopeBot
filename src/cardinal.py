@@ -5,7 +5,7 @@ class Cardinal:
     # init
     def __init__(self, member):
         self.member = member
-        self.name = member.name
+        self.name = member.display_name
         self.id = member.id
         self.pope_points = 0
         self.sin_coins = 0
