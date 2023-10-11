@@ -167,6 +167,17 @@ async def announce_pope_change(member, client):
     except Exception as e:
         print("Error: Could not announce pope change")
         print(e)
+
+
+async def announce_crusade_end(client, crusade_name, winning_city, losing_city):
+    try:
+        channel = client.get_channel(constants.ANNOUNCEMENT_CHANNEL_ID)
+        embed = discord.Embed(title=f"{crusade_name} has ended!", color=0x00ff00)
+        embed.add_field(name=f"{winning_city} has won!", value=f"{losing_city} has lost!", inline=False)
+        await channel.send(embed=embed)
+    except Exception as e:
+        print("Error: Could not announce crusade end")
+        print(e)
         
 
 async def change_guild_icon(client, image_file):

@@ -47,12 +47,14 @@ async def print_crusade(channel):
         fields.append(("Attacking Army", f"{active_crusade.attacking_city}\nCommanded by: {active_crusade.attacking_general.name}\nSoldiers:" 
                        + f"\n".join([f"{cardinal.name}" for cardinal in active_crusade.attacking_army if cardinal != active_crusade.attacking_general])
                        + f"\nFunding: {'{:.2E}'.format(active_crusade.attacking_funding)}"
-                       + f"\nStrength: {'{:.2E}'.format(active_crusade.attacking_army_strength())}", False))
+                       + f"\nStrength: {'{:.2E}'.format(active_crusade.attacking_army_strength())}", False)
+                       )
         defending_general = active_crusade.defending_general.name if active_crusade.defending_general is not None else "None - Claim by donating to the Defense"
         fields.append(("Defending Army", f"{active_crusade.defending_city}\nCommanded by: {defending_general}\nSoldiers:" 
                        + f"\n".join([f"{cardinal.name}" for cardinal in active_crusade.defending_army if cardinal != defending_general])
                        + f"\nFunding: {'{:.2E}'.format(active_crusade.defending_funding)}"
-                       + f"\nStrength: {'{:.2E}'.format(active_crusade.defending_army_strength())}", False))
+                       + f"\nStrength: {'{:.2E}'.format(active_crusade.defending_army_strength())}", False)
+                       )
         for name, value, inline in fields:
             embed.add_field(name=name, value=value, inline=inline)
         await channel.send(embed=embed)
@@ -144,7 +146,6 @@ async def process_command(message, client):
                 
                 # Get the number of points to add
                 amount = message_content[2]
-                # check if amount is a number
                 if not amount.isdigit():
                     await message.reply("You need to enter a number. Format: !SIN @user amount")
                 else:
@@ -228,7 +229,7 @@ async def process_command(message, client):
                 defending_city = message_content[2].upper()
                 
                 if active_crusade is None:
-                    active_crusade = Crusade("Crusade", attacking_city, defending_city)
+                    active_crusade = Crusade(client, "Crusade", attacking_city, defending_city)
                     active_crusade.add_attacking_soldier(get_cardinal_by_id(message.author.id))
                     active_crusade.set_attacking_general(get_cardinal_by_id(message.author.id))
 
@@ -237,13 +238,26 @@ async def process_command(message, client):
                     embed.set_footer(text=get_random_verse())
 
                     await message.channel.send(embed=embed)
+                    await check_for_pope_change(client)
                 else:
                     await message.reply(f"Crusade already active")
-                    print(f"Active Crusade {active_crusade.name}")
-                    print(active_crusade.attacking_city, active_crusade.defending_city)
+                    #print(f"Active Crusade {active_crusade.name}")
+                    #print(active_crusade.attacking_city, active_crusade.defending_city)
             elif len(message_content) == 1:
                 if active_crusade is not None:
                     await print_crusade(message.channel)
+                else:
+                    await message.reply(f"Format: !Crusade <attacking city> <defending city>")
+            elif len(message_content) == 2:
+                if author_is_pope(message):
+                    if active_crusade is not None:
+                        if message_content[1].upper() == "CONCLUDE":
+                            await active_crusade.conclude_crusade()
+                            active_crusade = None
+                        else:
+                            await message.reply(f"Format: !Crusade Conclude")
+                    else:
+                        await message.reply("No active Crusade")
                 else:
                     await message.reply(f"Format: !Crusade <attacking city> <defending city>")
             else:
@@ -267,7 +281,7 @@ async def process_command(message, client):
                     try:
                         active_crusade.add_funds(city, cardinal, amount, author_is_pope(message))
                         await message.reply(f"{amount} Pope Points donated to {city} by {message.author.name}")
-                        check_for_pope_change(client)
+                        await check_for_pope_change(client)
                     except exceptions.CityNotInCrusade as e:
                         await message.reply(f"{e}")
                     except exceptions.CardinalAlreadyDeployed as e:
@@ -278,4 +292,6 @@ async def process_command(message, client):
                         await message.reply(f"{e}")
                 else:
                     await message.reply("No active Crusade")
+            else:
+                await message.reply(f"Format: !Donate <city> amount")
             
