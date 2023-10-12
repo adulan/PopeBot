@@ -43,7 +43,7 @@ jobs:
       - name: Check test coverage
         run: |
           python -m coverage erase
-          python -m coverage run -m -a unittest tests.test_cardinal tests.test_actions tests.test_utils
+          python -m coverage run -m -a unittest tests.test_cardinal tests.test_actions tests.test_utils tests.test_vcrusade
           coverage xml
           coverage_threshold=$(python -c "import xml.etree.ElementTree as ET; root = ET.parse('coverage.xml').getroot(); print(root.attrib['line-rate'])")
           echo "Test coverage: $coverage_threshold"
