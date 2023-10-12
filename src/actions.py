@@ -195,7 +195,8 @@ async def process_command(message, client):
             fields.append(["!Pope-Help", "Prints this message", False])
             fields.append(["!Crusade", "Prints the current Crusade", False])
             fields.append(["!Crusade <attacking city> <defending city>", "Starts a Crusade", False])
-            fields.append(["!Donate <city> amount", "Donates Pope Points to a Crusade and join that City's Army", False])
+            fields.append(["!Crusade Conclude", "The Pope can end the current Crusade", False])
+            fields.append(["!Donate <city> amount", "Donates Pope Points to a Crusade and join that side's Army", False])
 
             embed = discord.Embed(description="Commands")
             embed.set_footer(text=get_random_verse())

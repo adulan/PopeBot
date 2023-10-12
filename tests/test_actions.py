@@ -1493,7 +1493,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
             await process_command(message, mock_client)
         
         assert message.channel.send.assert_called_once() == None
-        assert mock_embeds.add_field.call_count == 10
+        assert mock_embeds.add_field.call_count == 11
 
     
     async def test_process_command_save(self):
