@@ -33,7 +33,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -45,7 +45,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -86,7 +86,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -97,6 +98,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         from src.actions import print_standings
 
         # Mock discord channel
@@ -133,7 +135,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
+            active_crusade, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -144,6 +147,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         from src.actions import print_standings
 
         # Mock discord channel
@@ -167,7 +171,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['constants'].CARDINAL_ROLE_ID = 1234567890
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -179,7 +183,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -222,7 +226,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -234,7 +238,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -263,7 +267,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -275,7 +279,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -328,7 +332,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -340,7 +344,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -401,7 +405,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -413,7 +417,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -458,7 +462,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -470,7 +474,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -501,7 +505,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -512,7 +516,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -543,7 +547,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -555,7 +559,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -604,7 +608,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -616,7 +620,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = True
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -667,7 +671,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -679,7 +683,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = True
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -728,7 +732,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -740,7 +744,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -788,7 +792,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list,\
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -800,7 +804,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -853,7 +857,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -865,7 +869,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -914,7 +918,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -926,7 +930,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -964,7 +968,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -976,7 +980,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -1015,7 +1019,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -1027,7 +1031,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -1072,7 +1076,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
             check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, \
-            active_crusade, get_member_from_cardinal_list
+            active_crusade, get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -1084,7 +1088,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -1135,7 +1139,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            set_mention_cardinals, check_for_pope_change, save_cardinals_json, active_crusade, get_member_from_cardinal_list
+            set_mention_cardinals, check_for_pope_change, save_cardinals_json, active_crusade, \
+            get_member_from_cardinal_list, announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
@@ -1146,7 +1151,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
-        
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         sys.modules['exceptions'] = exceptions
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
@@ -1192,7 +1197,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            set_mention_cardinals, check_for_pope_change, save_cardinals_json, active_crusade, get_member_from_cardinal_list
+            set_mention_cardinals, check_for_pope_change, save_cardinals_json, active_crusade, get_member_from_cardinal_list, \
+            announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
@@ -1204,6 +1210,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].active_crusade = active_crusade
         sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
         sys.modules['exceptions'] = exceptions
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         import src.crusade as Crusade
         sys.modules['crusade'] = Crusade
         
@@ -1252,7 +1259,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade, \
+            announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -1263,6 +1271,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         from src.actions import process_command
         
         # Mock discord objects
@@ -1298,7 +1307,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade, \
+            announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -1309,6 +1319,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         from src.actions import process_command
         
         # Mock discord objects
@@ -1344,7 +1355,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade, \
+            announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
@@ -1355,6 +1367,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].add_member_to_cardinal_list = add_member_to_cardinal_list
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         from src.actions import process_command
         
         # Mock discord objects
@@ -1396,7 +1409,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'] = __import__('src.utils')
         sys.modules['utils'].cardinal_list = ['']
         from src.utils import author_is_pope, get_cardinal_by_id, rank_cardinals, add_member_to_cardinal_list, \
-            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade
+            check_for_pope_change, save_cardinals_json, populate_cardinals_json, set_mention_cardinals, active_crusade, \
+            announce_crusade_end
         sys.modules['utils'].set_mention_cardinals = set_mention_cardinals
         sys.modules['utils'].populate_cardinals_json = populate_cardinals_json
         sys.modules['utils'].author_is_pope = author_is_pope
@@ -1407,6 +1421,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         sys.modules['utils'].armageddon = False
         sys.modules['utils'].save_cardinals_json = save_cardinals_json
         sys.modules['utils'].active_crusade = active_crusade
+        sys.modules['utils'].announce_crusade_end = announce_crusade_end
         from src.actions import process_command
         
         # Mock discord objects
@@ -1813,6 +1828,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         member.name = "Test Cardinal"
         member.display_name = "Test Cardinal"
         member.id = 2468101214
+        member.roles = []
 
         message1.author = member        
         
@@ -1896,7 +1912,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         test_cardinal.pope_points = 200
         test_cardinal_list = [test_cardinal]
 
-        test_crusade = Crusade.Crusade("CRUSADE", "BABYLON", "JERUSALEM")
+        mock_client = AsyncMock()
+        test_crusade = Crusade.Crusade(mock_client, "CRUSADE", "BABYLON", "JERUSALEM")
         global active_crusade
         active_crusade = test_crusade
         
@@ -1942,7 +1959,9 @@ class ActionsTests(IsolatedAsyncioTestCase):
         test_cardinal.pope_points = 200
         test_cardinal_list = [test_cardinal]
 
-        test_crusade = Crusade.Crusade("CRUSADE", "BABYLON", "JERUSALEM")
+        mock_client = AsyncMock()
+
+        test_crusade = Crusade.Crusade(mock_client, "CRUSADE", "BABYLON", "JERUSALEM")
         global active_crusade
         active_crusade = test_crusade
  
@@ -1976,7 +1995,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         test_cardinal.pope_points = 200
         test_cardinal_list = [test_cardinal]
 
-        test_crusade = Crusade.Crusade("CRUSADE", "BABYLON", "JERUSALEM")
+        mock_client = AsyncMock()
+        test_crusade = Crusade.Crusade(mock_client, "CRUSADE", "BABYLON", "JERUSALEM")
         global active_crusade
         active_crusade = test_crusade
  
@@ -2010,7 +2030,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         test_cardinal.pope_points = 200
         test_cardinal_list = [test_cardinal]
 
-        test_crusade = Crusade.Crusade("CRUSADE", "BABYLON", "JERUSALEM")
+        mock_client = AsyncMock()
+        test_crusade = Crusade.Crusade(mock_client, "CRUSADE", "BABYLON", "JERUSALEM")
         global active_crusade
         active_crusade = test_crusade
  
@@ -2045,7 +2066,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         test_cardinal.pope_points = 200
         test_cardinal_list = []
 
-        test_crusade = Crusade.Crusade("CRUSADE", "BABYLON", "JERUSALEM")
+        mock_client = AsyncMock()
+        test_crusade = Crusade.Crusade(mock_client, "CRUSADE", "BABYLON", "JERUSALEM")
         global active_crusade
         active_crusade = test_crusade
 
@@ -2106,7 +2128,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         test_cardinal.pope_points = 200
         test_cardinal_list = [test_cardinal]
 
-        test_crusade = Crusade.Crusade("CRUSADE", "BABYLON", "JERUSALEM")
+        mock_client = AsyncMock()
+        test_crusade = Crusade.Crusade(mock_client, "CRUSADE", "BABYLON", "JERUSALEM")
  
         with patch("src.utils.cardinal_list", test_cardinal_list),  patch("src.actions.active_crusade", test_crusade), patch('src.crusade.get_member_from_cardinal_list', member):
             await process_command(message1, None)
