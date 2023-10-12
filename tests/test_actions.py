@@ -2058,7 +2058,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         member = Mock()
         member.name = "Test Cardinal"
         member.id = 2468101214
-        member.roles = []
+        member.roles = [999]
 
         message1.author = member
 

@@ -1,4 +1,4 @@
-import exceptions
+from src import exceptions
 from math import log
 from utils import get_member_from_cardinal_list, check_for_pope_change, announce_crusade_end
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -141,15 +141,18 @@ class Crusade:
             losing_city = self.defending_city
             for cardinal in self.attacking_army:
                 cardinal.add_pope_points(individual_reward)
-            self.attacking_general.add_pope_points(1000)
-            self.defending_general.sin_coins = 0
+            if self.attacking_general is not None:
+                self.attacking_general.add_pope_points(1000)
+            if self.defending_general is not None:
+                self.defending_general.sin_coins = 0
         elif self.defending_army_size() > 0:
             individual_reward = total_reward/self.defending_army_size()
             winning_city = self.defending_city
             losing_city = self.attacking_city
             for cardinal in self.defending_army:
                 cardinal.add_pope_points(individual_reward)
-            self.defending_general.add_pope_points(1000)
+            if self.defending_general is not None:
+                self.defending_general.add_pope_points(1000)
 
         await announce_crusade_end(self.client, self.name, winning_city, losing_city)
         await check_for_pope_change(self.client)
