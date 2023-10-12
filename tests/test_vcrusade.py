@@ -69,6 +69,41 @@ class CrusadeTests(unittest.IsolatedAsyncioTestCase):
         assert cardinal.pope_points == 900
 
 
+    def test_add_defending_funding(self):
+        cardinal = Mock()
+        member = Mock()
+        cardinal.id = 1234
+        cardinal.pope_points = 1000
+        member.id = 1234
+        cardinal.member = member
+        global test_crusade
+        test_crusade.defending_army = [cardinal]
+        mock_add_defending_soldier = Mock()
+        
+        with patch("src.utils.cardinal_list", [cardinal]), patch("src.crusade.Crusade.add_defending_soldier", mock_add_defending_soldier):
+            test_crusade._add_defending_funding(cardinal, 100, 100)
+        mock_add_defending_soldier.assert_not_called() == None
+        assert test_crusade.defending_funding == 100
+        cardinal.add_pope_points.assert_called_once_with(-100) == None
+
+
+    def test_add_defending_funding_new_soldier(self):
+        cardinal = Mock()
+        member = Mock()
+        cardinal.id = 1234
+        cardinal.pope_points = 1000
+        member.id = 1234
+        cardinal.member = member
+        global test_crusade
+        mock_add_defending_soldier = Mock()
+        
+        with patch("src.utils.cardinal_list", [cardinal]), patch("src.crusade.Crusade.add_defending_soldier", mock_add_defending_soldier):
+            test_crusade._add_defending_funding(cardinal, 100, 100)
+        mock_add_defending_soldier.assert_called_once_with(cardinal) == None
+        assert test_crusade.defending_funding == 100
+        cardinal.add_pope_points.assert_called_once_with(-100) == None
+
+
     def test_attacking_army_strength(self):
         cardinal1 = Mock()
         member1 = Mock()
@@ -90,12 +125,14 @@ class CrusadeTests(unittest.IsolatedAsyncioTestCase):
         # first log value = (1000-25) + (1000-100) + (500/2)
         self.assertEqual(test_crusade.attacking_army_strength(), log(2125, 2))
 
+
     def test_attacking_army_strength_no_army(self):
         global test_crusade
         test_crusade.attacking_army = []
         test_crusade.attacking_funding = 500
         
         self.assertEqual(test_crusade.attacking_army_strength(), 0)
+
 
     def test_attacking_army_strength_army_zero(self):
         cardinal1 = Mock()
@@ -111,6 +148,7 @@ class CrusadeTests(unittest.IsolatedAsyncioTestCase):
         test_crusade.attacking_funding = 0
 
         self.assertEqual(test_crusade.attacking_army_strength(), 0)
+
 
     def test_defending_army_strength(self):
         cardinal1 = Mock()
@@ -133,12 +171,14 @@ class CrusadeTests(unittest.IsolatedAsyncioTestCase):
         # first log value = (1000-25) + (1000-100) + (500/2)
         self.assertEqual(test_crusade.defending_army_strength(), log(2125, 2))
 
+
     def test_defending_army_strength_no_army(self):
         global test_crusade
         test_crusade.defending_army = []
         test_crusade.defending_funding = 500
         
         self.assertEqual(test_crusade.defending_army_strength(), 0)
+
 
     def test_defending_army_strength_army_zero(self):
         cardinal1 = Mock()
@@ -154,6 +194,7 @@ class CrusadeTests(unittest.IsolatedAsyncioTestCase):
         test_crusade.defending_funding = 0
 
         self.assertEqual(test_crusade.defending_army_strength(), 0)
+
 
     async def test_conclude_crusade_attack_win(self):
         from src.cardinal import Cardinal
@@ -203,6 +244,7 @@ class CrusadeTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(test_crusade.attacking_general, None)
         self.assertEqual(test_crusade.defending_general, None)
             
+    
     async def test_conclude_crusade_defend_win(self):
         from src.cardinal import Cardinal
         

@@ -248,7 +248,7 @@ async def process_command(message, client):
                 if active_crusade is not None:
                     await print_crusade(message.channel)
                 else:
-                    await message.reply(f"Format: !Crusade <attacking city> <defending city>")
+                    await message.reply(f"No Crusade active.\nStart one with Format: !Crusade <attacking city> <defending city>")
             elif len(message_content) == 2:
                 if author_is_pope(message):
                     if active_crusade is not None:
@@ -260,7 +260,7 @@ async def process_command(message, client):
                     else:
                         await message.reply("No active Crusade")
                 else:
-                    await message.reply(f"Format: !Crusade <attacking city> <defending city>")
+                    await message.reply(f"Only the Pope can conclude a Crusade")
             else:
                 await message.reply(f"Format: !Crusade <attacking city> <defending city>")
 

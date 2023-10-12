@@ -1842,6 +1842,84 @@ class ActionsTests(IsolatedAsyncioTestCase):
             await process_command(message1, None)
             assert mock_channel.send.assert_called_once() == None
 
+    
+    async def test_process_command_mcrusade_print_with_active(self):
+        import src.exceptions as exceptions
+        from src.utils import get_member_from_cardinal_list
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+        
+        # Mock message
+        mock_channel = AsyncMock()
+        message1 = AsyncMock()
+        message1.reply = AsyncMock()
+        message1.content = "!CRUSADE"
+        message1.channel = mock_channel
+
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
+        member.id = 2468101214
+        member.roles = []
+
+        message1.author = member        
+        
+        test_cardinal = Cardinal(member)
+        test_cardinal.id = 2468101214
+        test_cardinal_list = [test_cardinal]
+
+        mock_crusade = Mock()
+        mock_print_crusade = AsyncMock()
+
+        with patch("src.utils.cardinal_list", test_cardinal_list), patch("src.crusade.Crusade", mock_crusade), \
+            patch("src.actions.print_crusade", mock_print_crusade):
+            await process_command(message1, None)
+            assert mock_print_crusade.assert_called_once() == None
+
+
+    async def test_process_command_mcrusade_print_not_active(self):
+        import src.exceptions as exceptions
+        from src.utils import get_member_from_cardinal_list
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+        
+        # Mock message
+        mock_channel = AsyncMock()
+        message1 = AsyncMock()
+        message1.reply = AsyncMock()
+        message1.content = "!CRUSADE"
+        message1.channel = mock_channel
+
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
+        member.id = 2468101214
+        member.roles = []
+
+        message1.author = member        
+        
+        test_cardinal = Cardinal(member)
+        test_cardinal.id = 2468101214
+        test_cardinal_list = [test_cardinal]
+
+        mock_crusade = Mock()
+        mock_print_crusade = AsyncMock()
+
+        with patch("src.utils.cardinal_list", test_cardinal_list), patch("src.actions.active_crusade", None), \
+            patch("src.actions.print_crusade", mock_print_crusade):
+            await process_command(message1, None)
+            assert message1.reply.assert_called_once_with("No Crusade active.\nStart one with Format: !Crusade <attacking city> <defending city>") == None
+
 
     async def test_process_command_mcrusade_already_set(self):
         import src.exceptions as exceptions
@@ -1888,6 +1966,178 @@ class ActionsTests(IsolatedAsyncioTestCase):
         assert message1.reply.assert_called_once_with("Format: !Crusade <attacking city> <defending city>") == None
 
 
+    async def test_process_command_mcrusade_xconclude(self):
+        import src.exceptions as exceptions
+        from src.utils import get_member_from_cardinal_list
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+
+        # Mock message
+        mock_channel = AsyncMock()
+        message1 = AsyncMock()
+        message1.reply = AsyncMock()
+        message1.content = "!CRUSADE CONCLUDE"
+        message1.channel = mock_channel
+
+        #Mock Role
+        mock_role = Mock()
+        mock_role.id = 9999
+        mock_role.name = "Pope"
+
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
+        member.id = 2468101214
+        member.roles = [mock_role]
+
+        message1.author = member        
+        
+        test_cardinal = Cardinal(member)
+        test_cardinal.id = 2468101214
+        test_cardinal_list = [test_cardinal]
+
+        active_crusade = AsyncMock()
+
+        with patch("src.utils.cardinal_list", test_cardinal_list), patch("src.actions.active_crusade", active_crusade):
+            await process_command(message1, None)
+            assert active_crusade.conclude_crusade.assert_called_once() == None
+
+
+    async def test_process_command_mcrusade_xconclude_not_pope(self):
+        import src.exceptions as exceptions
+        from src.utils import get_member_from_cardinal_list
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+        sys.modules['constants'].POPE_ROLE_ID = 1111
+
+        # Mock message
+        mock_channel = AsyncMock()
+        message1 = AsyncMock()
+        message1.reply = AsyncMock()
+        message1.content = "!CRUSADE CONCLUDE"
+        message1.channel = mock_channel
+
+        #Mock Role
+        mock_role = Mock()
+        mock_role.id = 9999
+        mock_role.name = "Cardinal"
+
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
+        member.id = 2468101214
+        member.roles = [mock_role]
+
+        message1.author = member        
+        
+        test_cardinal = Cardinal(member)
+        test_cardinal.id = 2468101214
+        test_cardinal_list = [test_cardinal]
+
+        active_crusade = AsyncMock()
+
+        with patch("src.utils.cardinal_list", test_cardinal_list), patch("src.actions.active_crusade", active_crusade):
+            await process_command(message1, None)
+        
+        assert active_crusade.assert_not_called() == None
+        assert message1.reply.assert_called_once_with("Only the Pope can conclude a Crusade") == None
+
+
+    async def test_process_command_mcrusade_xconclude_bad_msg(self):
+        import src.exceptions as exceptions
+        from src.utils import get_member_from_cardinal_list
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+
+        # Mock message
+        mock_channel = AsyncMock()
+        message1 = AsyncMock()
+        message1.reply = AsyncMock()
+        message1.content = "!CRUSADE inconclusive"
+        message1.channel = mock_channel
+
+        #Mock Role
+        mock_role = Mock()
+        mock_role.id = 9999
+        mock_role.name = "Pope"
+
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
+        member.id = 2468101214
+        member.roles = [mock_role]
+
+        message1.author = member        
+        
+        test_cardinal = Cardinal(member)
+        test_cardinal.id = 2468101214
+        test_cardinal_list = [test_cardinal]
+
+        active_crusade = AsyncMock()
+
+        with patch("src.utils.cardinal_list", test_cardinal_list), patch("src.actions.active_crusade", active_crusade):
+            await process_command(message1, None)
+        
+        assert active_crusade.assert_not_called() == None
+        assert message1.reply.assert_called_once_with("Format: !Crusade Conclude") == None
+
+
+    async def test_process_command_mcrusade_xconclude_not_active(self):
+        import src.exceptions as exceptions
+        from src.utils import get_member_from_cardinal_list
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+
+        # Mock message
+        mock_channel = AsyncMock()
+        message1 = AsyncMock()
+        message1.reply = AsyncMock()
+        message1.content = "!CRUSADE CONCLUDE"
+        message1.channel = mock_channel
+
+        #Mock Role
+        mock_role = Mock()
+        mock_role.id = 9999
+        mock_role.name = "Pope"
+
+        # Mock discord member
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.display_name = "Test Cardinal"
+        member.id = 2468101214
+        member.roles = [mock_role]
+
+        message1.author = member        
+        
+        test_cardinal = Cardinal(member)
+        test_cardinal.id = 2468101214
+        test_cardinal_list = [test_cardinal]
+
+        with patch("src.utils.cardinal_list", test_cardinal_list), patch("src.actions.active_crusade", None):
+            await process_command(message1, None)
+
+        assert message1.reply.assert_called_once_with("No active Crusade") == None
+
+
     async def test_process_command_mdonate(self):
         import src.exceptions as exceptions
         sys.modules['exceptions'] = exceptions
@@ -1917,14 +2167,6 @@ class ActionsTests(IsolatedAsyncioTestCase):
         global active_crusade
         active_crusade = test_crusade
         
-        
-        print(test_cardinal_list[0].id)
-        mock_donate = Mock()
-
- 
-        print(test_cardinal_list[0].id)
-        mock_donate = Mock()
-
         with patch("src.utils.cardinal_list", test_cardinal_list), patch('src.crusade.get_member_from_cardinal_list', member), patch("src.actions.active_crusade", test_crusade):
             active_crusade.add_attacking_soldier(test_cardinal)
             await process_command(message1, None)
@@ -1934,6 +2176,42 @@ class ActionsTests(IsolatedAsyncioTestCase):
         assert test_cardinal.pope_points == 100
 
         assert message1.reply.assert_called_once_with("100 Pope Points donated to BABYLON by Test Cardinal") == None
+
+
+    async def test_process_command_mdonate_bad_message(self):
+        import src.exceptions as exceptions
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+        sys.modules['bible_verses'] = Mock()
+
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!donate"
+
+        member = Mock()
+        member.name = "Test Cardinal"
+        member.id = 2468101214
+        member.roles = []
+
+        message1.author = member
+
+        test_cardinal = Cardinal(member)
+        test_cardinal.pope_points = 200
+        test_cardinal_list = [test_cardinal]
+
+        mock_client = AsyncMock()
+        test_crusade = Crusade.Crusade(mock_client, "CRUSADE", "BABYLON", "JERUSALEM")
+        global active_crusade
+        active_crusade = test_crusade
+        
+        with patch("src.utils.cardinal_list", test_cardinal_list), patch('src.crusade.get_member_from_cardinal_list', member), patch("src.actions.active_crusade", test_crusade):
+            active_crusade.add_attacking_soldier(test_cardinal)
+            await process_command(message1, None)
+
+        assert message1.reply.assert_called_once_with("Format: !Donate <city> amount") == None
 
 
     async def test_process_command_mdonate_opposing_side(self):
