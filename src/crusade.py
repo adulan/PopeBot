@@ -1,4 +1,4 @@
-from src import exceptions
+import exceptions
 from math import log
 from utils import get_member_from_cardinal_list, check_for_pope_change, announce_crusade_end
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
