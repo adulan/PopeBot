@@ -169,12 +169,27 @@ async def announce_pope_change(member, client):
         print(e)
 
 
-async def announce_crusade_end(client, crusade_name, winning_city, losing_city):
+async def announce_crusade_end(client, crusade, winning_city, losing_city):
     try:
         channel = client.get_channel(constants.ANNOUNCEMENT_CHANNEL_ID)
-        embed = discord.Embed(title=f"{crusade_name} has ended!", color=0x00ff00)
-        embed.add_field(name=f"{winning_city} has won!", value=f"{losing_city} has lost!", inline=False)
+        embed = discord.Embed(title=f"{crusade.name} has ended!", color=0x00ff00)
+        fields =[(f"{winning_city} has won!", f"{losing_city} has lost!", False)]
+        fields.append(("Attacking Army", f"{crusade.attacking_city}\nCommanded by: {crusade.attacking_general.name}\nSoldiers:\n" 
+                       + f"\n".join([f"- {cardinal.name}" for cardinal in crusade.attacking_army if cardinal != crusade.attacking_general])
+                       + f"\nFunding: {'{:.2E}'.format(crusade.attacking_funding)}"
+                       + f"\nStrength: {'{:.2E}'.format(crusade.attacking_army_strength())}", False)
+                       )
+        defending_general = crusade.defending_general.name if crusade.defending_general is not None else "None"
+        fields.append(("Defending Army", f"{crusade.defending_city}\nCommanded by: {defending_general}\nSoldiers:\n" 
+                       + f"\n".join([f"- {cardinal.name}" for cardinal in crusade.defending_army if cardinal != crusade.defending_general])
+                       + f"\nFunding: {'{:.2E}'.format(crusade.defending_funding)}"
+                       + f"\nStrength: {'{:.2E}'.format(crusade.defending_army_strength())}", False)
+                       )
+        for name, value, inline in fields:
+            embed.add_field(name=name, value=value, inline=inline)
         await channel.send(embed=embed)
+        global active_crusade
+        active_crusade = None
     except Exception as e:
         print("Error: Could not announce crusade end")
         print(e)

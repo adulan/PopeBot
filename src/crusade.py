@@ -153,8 +153,10 @@ class Crusade:
                 cardinal.add_pope_points(individual_reward)
             if self.defending_general is not None:
                 self.defending_general.add_pope_points(1000)
+            if self.attacking_general is not None:
+                self.attacking_general.add_sin_coins(1000)
 
-        await announce_crusade_end(self.client, self.name, winning_city, losing_city)
+        await announce_crusade_end(self.client, self, winning_city, losing_city)
         await check_for_pope_change(self.client)
              
         self.attacking_city = None

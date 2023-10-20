@@ -44,14 +44,14 @@ async def print_crusade(channel):
     embed.set_footer(text=get_random_verse())
     if active_crusade is not None:
         fields = [("Crusade", f"\n{active_crusade.attacking_city} vs {active_crusade.defending_city}", False)]
-        fields.append(("Attacking Army", f"{active_crusade.attacking_city}\nCommanded by: {active_crusade.attacking_general.name}\nSoldiers:" 
-                       + f"\n".join([f"{cardinal.name}" for cardinal in active_crusade.attacking_army if cardinal != active_crusade.attacking_general])
+        fields.append(("Attacking Army", f"{active_crusade.attacking_city}\nCommanded by: {active_crusade.attacking_general.name}\nSoldiers:\n" 
+                       + f"\n".join([f"- {cardinal.name}" for cardinal in active_crusade.attacking_army if cardinal != active_crusade.attacking_general])
                        + f"\nFunding: {'{:.2E}'.format(active_crusade.attacking_funding)}"
                        + f"\nStrength: {'{:.2E}'.format(active_crusade.attacking_army_strength())}", False)
                        )
         defending_general = active_crusade.defending_general.name if active_crusade.defending_general is not None else "None - Claim by donating to the Defense"
-        fields.append(("Defending Army", f"{active_crusade.defending_city}\nCommanded by: {defending_general}\nSoldiers:" 
-                       + f"\n".join([f"{cardinal.name}" for cardinal in active_crusade.defending_army if cardinal != defending_general])
+        fields.append(("Defending Army", f"{active_crusade.defending_city}\nCommanded by: {defending_general}\nSoldiers:\n" 
+                       + f"\n".join([f"- {cardinal.name}" for cardinal in active_crusade.defending_army if cardinal != active_crusade.defending_general])
                        + f"\nFunding: {'{:.2E}'.format(active_crusade.defending_funding)}"
                        + f"\nStrength: {'{:.2E}'.format(active_crusade.defending_army_strength())}", False)
                        )
@@ -125,7 +125,7 @@ async def process_command(message, client):
                         if author is not None:
                             author.add_sin_coins(25)
                     else:
-                        if author == cardinal and amount > 50 and not author_is_pope(message):
+                        if author == cardinal and amount > 500 and not author_is_pope(message):
                             author.add_sin_coins(amount/2)
                         cardinal.add_pope_points(amount)
                     await check_for_pope_change(client)
@@ -184,7 +184,7 @@ async def process_command(message, client):
                 else:
                     print("Need two members to load Cardinals")
 
-        case "!POPE-HELP":
+        case "!POPE-HELP" | "!HELP":
             fields = []
             fields.append(["!PP @user ##", "Give pope points to user", False])
             fields.append(["!SIN @user ##", "Give sin coins to user", False])
@@ -228,6 +228,9 @@ async def process_command(message, client):
             if len(message_content) == 3:
                 attacking_city = message_content[1].upper()
                 defending_city = message_content[2].upper()
+                if attacking_city == defending_city:
+                    await message.reply("Attacking and defending cities cannot be the same")
+                    return
                 
                 if active_crusade is None:
                     active_crusade = Crusade(client, "Crusade", attacking_city, defending_city)
@@ -242,8 +245,6 @@ async def process_command(message, client):
                     await check_for_pope_change(client)
                 else:
                     await message.reply(f"Crusade already active")
-                    #print(f"Active Crusade {active_crusade.name}")
-                    #print(active_crusade.attacking_city, active_crusade.defending_city)
             elif len(message_content) == 1:
                 if active_crusade is not None:
                     await print_crusade(message.channel)

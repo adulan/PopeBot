@@ -285,7 +285,7 @@ class CrusadeTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(cardinal1.pope_points, 5000)
         self.assertEqual(cardinal2.pope_points, 4000)
         self.assertEqual(cardinal3.pope_points, 1000)
-        self.assertEqual(cardinal3.sin_coins, 100)
+        self.assertEqual(cardinal3.sin_coins, 1100)
         self.assertEqual(test_crusade.attacking_funding, 0)
         self.assertEqual(test_crusade.defending_funding, 0)
         self.assertEqual(test_crusade.attacking_army, [])

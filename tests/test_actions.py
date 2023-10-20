@@ -883,7 +883,7 @@ class ActionsTests(IsolatedAsyncioTestCase):
         # Mock message
         message = AsyncMock()
         message.reply = AsyncMock()
-        message.content = "!pp @TestCardinal 100"
+        message.content = "!pp @TestCardinal 600"
         message.channel = channel
 
         # Mock discord member
@@ -903,8 +903,8 @@ class ActionsTests(IsolatedAsyncioTestCase):
         with patch('src.actions.check_for_pope_change', mock_check_for_pope_change), patch("src.utils.cardinal_list", test_cardinal_list):
             await process_command(message, client)
         assert mock_check_for_pope_change.assert_called_once_with(client) == None
-        assert test_cardinal.pope_points == 110
-        assert test_cardinal.sin_coins == 60
+        assert test_cardinal.pope_points == 610
+        self.assertEqual(test_cardinal.sin_coins, 310) == None
 
 
     async def test_process_command_pp_bad_mention(self):
@@ -1964,6 +1964,25 @@ class ActionsTests(IsolatedAsyncioTestCase):
 
         await process_command(message1, None)
         assert message1.reply.assert_called_once_with("Format: !Crusade <attacking city> <defending city>") == None
+
+
+    async def test_process_command_mcrusade_same_cities(self):
+        import src.exceptions as exceptions
+        from src.utils import get_member_from_cardinal_list
+        sys.modules['utils'].get_member_from_cardinal_list = get_member_from_cardinal_list
+        
+        sys.modules['exceptions'] = exceptions
+        import src.crusade as Crusade
+        sys.modules['crusade'] = Crusade
+        from src.actions import process_command
+        
+        # Mock message
+        message1 = MagicMock()
+        message1.reply = AsyncMock()
+        message1.content = "!CRUSADE JERUSALEM JERUSALEM"
+
+        await process_command(message1, None)
+        assert message1.reply.assert_called_once_with("Attacking and defending cities cannot be the same") == None
 
 
     async def test_process_command_mcrusade_xconclude(self):
