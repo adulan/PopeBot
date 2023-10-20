@@ -101,7 +101,7 @@ async def process_command(message, client):
 
         case "!PP":
             # check if the message has two parameters
-            if len(message_content) != 3:
+            if len(message_content) < 3:
                 await message.reply("Format: !PP @user amount")
                 return
             # check if the message has a mention
@@ -134,7 +134,7 @@ async def process_command(message, client):
 
         case "!SIN":
             # check if the message has two parameters
-            if len(message_content) != 3:
+            if len(message_content) < 3:
                 await message.reply("Format: !SIN @user amount")
                 return
             if len(message.mentions) > 0:
@@ -192,7 +192,7 @@ async def process_command(message, client):
             fields.append(["!Absolve @user", "The Pope may Absolve user of all sins", False])
             fields.append(["!Save", "Save the current Cardinals to a JSON file", False])
             fields.append(["!Mention [True|False]", "Sets mentioning Cardinals during Habemus Papam", False])
-            fields.append(["!Pope-Help", "Prints this message", False])
+            fields.append(["!Pope-Help | !Help", "Prints this message", False])
             fields.append(["!Crusade", "Prints the current Crusade", False])
             fields.append(["!Crusade <attacking city> <defending city>", "Starts a Crusade", False])
             fields.append(["!Crusade Conclude", "The Pope can end the current Crusade", False])
