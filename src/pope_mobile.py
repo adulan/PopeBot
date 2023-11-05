@@ -40,11 +40,12 @@ async def on_message(message):
 
     # Check if social media link
     content = message.content.lower()
-    if content.find("://www.instagram.com") >= 0:
+    if content.find("://www.instagram.com") >= 0 or content.find("://instagram.com") >= 0:
         await replace_instagam_link(message)
-    elif content.find("://www.tiktok.com") >= 0:
+    elif content.find("://www.tiktok.com") >= 0 or content.find("://tiktok.com") >= 0:
         await replace_tiktok_link(message)
-    elif content.find("://www.twitter.com") >= 0:
+    elif content.find("://www.twitter.com") >= 0 or content.find("://twitter.com") >= 0 \
+        or content.find("://www.x.com") >= 0 or content.find("://x.com") >= 0:
         await replace_twitter_link(message)
 
 
