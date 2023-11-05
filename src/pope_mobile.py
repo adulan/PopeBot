@@ -3,6 +3,8 @@ from constants import DISCORD_TOKEN
 from utils import populate_cardinals
 from actions import process_command
 from bible_verses import check_reference
+from social_media import replace_instagam_link, replace_tiktok_link, replace_twitter_link
+
 
 # Define the Discord client with intents
 intents = discord.Intents.default()
@@ -35,6 +37,15 @@ async def on_message(message):
     reference = check_reference(message.content)
     if reference != False:
         await message.channel.send(reference)
+
+    # Check if social media link
+    content = message.content.lower()
+    if content.find("://www.instagram.com") >= 0:
+        await replace_instagam_link(message)
+    elif content.find("://www.tiktok.com") >= 0:
+        await replace_tiktok_link(message)
+    elif content.find("://www.twitter.com") >= 0:
+        await replace_twitter_link(message)
 
 
 # Run the client with the Discord API token
